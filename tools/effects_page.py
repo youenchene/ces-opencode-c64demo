@@ -8,6 +8,7 @@ Usage: python3 tools/effects_page.py        (or: make effects-page)
   with the doc. Their previews are browser simulations (tools/effects_page.js), marked as such.
 The page is a single self-contained file apart from the GIFs (relative paths).
 """
+import glob
 import html
 import os
 import re
@@ -93,13 +94,21 @@ def card_impl(gif, name, desc, where):
 </article>"""
 
 
+def example_link(fx_id):
+    files = glob.glob(os.path.join(ROOT, "docs", "examples", f"{fx_id[0]}{int(fx_id[1:]):02d}_*.asm"))
+    if not files:
+        return ""
+    f = os.path.basename(files[0])
+    return f' · example: <a href="examples/{f}"><code>{f}</code></a>'
+
+
 def card_lib(r):
     return f"""<article class="card" data-tier="{r['tier']}" data-text="{html.escape((r['name'] + ' ' + r['see']).lower())}">
   <div class="pic"><canvas data-fx="{r['id']}"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">{r['id']}</span> {md_inline(r['name'])}</h3>
   <p>{md_inline(r['see'])}</p>
   <details><summary>How</summary><p>{link_sources(md_inline(r['how']))}</p></details>
-  <p class="meta">CPU: {md_inline(r['cpu'])} · {link_sources(md_inline(r['where']))}</p>
+  <p class="meta">CPU: {md_inline(r['cpu'])} · {link_sources(md_inline(r['where']))}{example_link(r['id'])}</p>
 </article>"""
 
 

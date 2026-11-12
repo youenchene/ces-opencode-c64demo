@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "vice": {
+        "type": "local",
+        "command": [
+          "node",
+          ".opencode/vice-mcp/dist/index.js"
+        ]
+      }
+    }
+  }
+}

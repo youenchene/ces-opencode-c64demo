@@ -8,6 +8,9 @@ Sources: the Codebase64 wiki (the community's demo-coding wiki, `https://codebas
 (see the end of this file). Codebase64 content is **CC BY-NC-SA 4.0**: read it, rewrite the routine in our
 ACME style, and credit the article in the code comment. Don't paste listings verbatim.
 
+**Every effect has a runnable example**: `docs/examples/<ID>_*.asm` (IDs zero-padded: A8 → `A08_beat_flash.asm`).
+Read it before integrating an effect into `src/main.asm`; check its `Limitations:` header.
+
 Link format: `cb:base:fld` means `https://codebase64.net/doku.php?id=base:fld`.
 
 ## How to read the tiers

@@ -130,406 +130,406 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <h3><span class="id">A1</span> Copper colour schemes</h3>
   <p>Bars change palette (fire, ice, rainbow, Rouen red &amp; gold)</p>
   <details><summary>How</summary><p>Edit the <code>bars</code> table. Brightness order: <code>0,6,9,11,2,4,8,12,14,10,5,15,3,7,13,1</code></p></details>
-  <p class="meta">CPU: 0 · <code>bars</code></p>
+  <p class="meta">CPU: 0 · <code>bars</code> · example: <a href="examples/A01_copper_schemes.asm"><code>A01_copper_schemes.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="bar direction / speed bars scroll up, down, or faster">
   <div class="pic"><canvas data-fx="A2"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A2</span> Bar direction / speed</h3>
   <p>Bars scroll up, down, or faster</p>
   <details><summary>How</summary><p>Rotate the table the other way, or call <code>rotate_bars</code> twice per frame</p></details>
-  <p class="meta">CPU: ~1k · <code>rotate_bars</code></p>
+  <p class="meta">CPU: ~1k · <code>rotate_bars</code> · example: <a href="examples/A02_bar_direction.asm"><code>A02_bar_direction.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="sine-moving bars several bars bounce on sine curves">
   <div class="pic"><canvas data-fx="A3"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A3</span> Sine-moving bars</h3>
   <p>Several bars bounce on sine curves</p>
   <details><summary>How</summary><p>Clear a 32-byte table, then plot 2-3 small gradients at <code>sine[t+i*40]</code>. Table built with <code>!for</code> + <code>sin()</code></p></details>
-  <p class="meta">CPU: ~1.5k · replaces <code>rotate_bars</code></p>
+  <p class="meta">CPU: ~1.5k · replaces <code>rotate_bars</code> · example: <a href="examples/A03_sine_bars.asm"><code>A03_sine_bars.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="colour cycling text any text row cycles a gradient">
   <div class="pic"><canvas data-fx="A4"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A4</span> Colour cycling text</h3>
   <p>Any text row cycles a gradient</p>
   <details><summary>How</summary><p>Write <code>gradient[(x+phase)&amp;15]</code> to <code>$d800+row*40+x</code></p></details>
-  <p class="meta">CPU: ~0.6k / row · part routine</p>
+  <p class="meta">CPU: ~0.6k / row · part routine · example: <a href="examples/A04_color_cycle_text.asm"><code>A04_color_cycle_text.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="shine / glint a white band crosses a logo">
   <div class="pic"><canvas data-fx="A5"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A5</span> Shine / glint</h3>
   <p>A white band crosses a logo</p>
   <details><summary>How</summary><p>Same as A4, with a gradient that is mostly one colour (see <code>ces_shine</code>)</p></details>
-  <p class="meta">CPU: ~2.5k · done</p>
+  <p class="meta">CPU: ~2.5k · done · example: <a href="examples/A05_shine.asm"><code>A05_shine.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="rainbow scroller scroller letters cycle colours">
   <div class="pic"><canvas data-fx="A6"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A6</span> Rainbow scroller</h3>
   <p>Scroller letters cycle colours</p>
   <details><summary>How</summary><p>A4 applied to row 24</p></details>
-  <p class="meta">CPU: ~0.6k · <code>scroller_update</code></p>
+  <p class="meta">CPU: ~0.6k · <code>scroller_update</code> · example: <a href="examples/A06_rainbow_scroller.asm"><code>A06_rainbow_scroller.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="scroller speed / direction / wobble faster, reverse, or speed follows a sine">
   <div class="pic"><canvas data-fx="A7"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A7</span> Scroller speed / direction / wobble</h3>
   <p>Faster, reverse, or speed follows a sine</p>
   <details><summary>How</summary><p><code>sbc #speed</code>, or speed = <code>sine[t]&gt;&gt;5</code>. Reverse = shift right and feed at column 0</p></details>
-  <p class="meta">CPU: 0 · <code>scroller_update</code></p>
+  <p class="meta">CPU: 0 · <code>scroller_update</code> · example: <a href="examples/A07_scroller_wobble.asm"><code>A07_scroller_wobble.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="border / background flash screen flashes on a beat">
   <div class="pic"><canvas data-fx="A8"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A8</span> Border / background flash</h3>
   <p>Screen flashes on a beat</p>
   <details><summary>How</summary><p>Set <code>$d020</code>/<code>$d021</code> to white, decay through a fade table over 6-8 frames. Trigger from a frame counter (beat table)</p></details>
-  <p class="meta">CPU: ~50 · <code>irq_bottom</code></p>
+  <p class="meta">CPU: ~50 · <code>irq_bottom</code> · example: <a href="examples/A08_beat_flash.asm"><code>A08_beat_flash.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="fade in / out smooth transitions between parts">
   <div class="pic"><canvas data-fx="A9"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A9</span> Fade in / out</h3>
   <p>Smooth transitions between parts</p>
   <details><summary>How</summary><p>Fade tables <code>fade[c]</code> → darker colour, applied to colour RAM over 8-16 frames (Veto&#x27;s colour ramps: <code><a href="https://codebase64.net/doku.php?id=vic">vic</a></code>)</p></details>
-  <p class="meta">CPU: ~4k while fading · part switch</p>
+  <p class="meta">CPU: ~4k while fading · part switch · example: <a href="examples/A09_fade.asm"><code>A09_fade.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="text reveal / wipe text appears column by column, or randomly">
   <div class="pic"><canvas data-fx="A10"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A10</span> Text reveal / wipe</h3>
   <p>Text appears column by column, or randomly</p>
   <details><summary>How</summary><p>Colour RAM starts black; per frame, set N cells to their real colour (column order or a random-permutation table)</p></details>
-  <p class="meta">CPU: small · part init</p>
+  <p class="meta">CPU: small · part init · example: <a href="examples/A10_text_reveal.asm"><code>A10_text_reveal.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="typewriter tweaks different speed, colours, extra lines">
   <div class="pic"><canvas data-fx="A11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A11</span> Typewriter tweaks</h3>
   <p>Different speed, colours, extra lines</p>
   <details><summary>How</summary><p><code>TYPE_SPEED</code>, <code>typer_text</code> control bytes</p></details>
-  <p class="meta">CPU: 0 · <code>typer_text</code></p>
+  <p class="meta">CPU: 0 · <code>typer_text</code> · example: <a href="examples/A11_typewriter.asm"><code>A11_typewriter.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="char animation waves, blinking windows, a waving flag">
   <div class="pic"><canvas data-fx="A12"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A12</span> Char animation</h3>
   <p>Waves, blinking windows, a waving flag</p>
   <details><summary>How</summary><p>Rewrite 8 bytes of one charset char per frame (e.g. ROL the water char bytes)</p></details>
-  <p class="meta">CPU: ~100 · <code>rouen</code> charset B</p>
+  <p class="meta">CPU: ~100 · <code>rouen</code> charset B · example: <a href="examples/A12_char_animation.asm"><code>A12_char_animation.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="twinkling windows / stars skyline windows and stars flicker">
   <div class="pic"><canvas data-fx="A13"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A13</span> Twinkling windows / stars</h3>
   <p>Skyline windows and stars flicker</p>
   <details><summary>How</summary><p>Random colour-RAM cell from a table set to yellow, another to dark, each frame</p></details>
-  <p class="meta">CPU: ~100 · <code>ces_update</code></p>
+  <p class="meta">CPU: ~100 · <code>ces_update</code> · example: <a href="examples/A13_twinkle.asm"><code>A13_twinkle.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="glitch / noise burst short &quot;signal lost&quot; moment">
   <div class="pic"><canvas data-fx="A14"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A14</span> Glitch / noise burst</h3>
   <p>Short &quot;signal lost&quot; moment</p>
   <details><summary>How</summary><p>For 5-10 frames: random <code>$d016</code> xscroll and <code>$d020</code> per frame, garbage colours on a few rows</p></details>
-  <p class="meta">CPU: small · part switch</p>
+  <p class="meta">CPU: small · part switch · example: <a href="examples/A14_glitch.asm"><code>A14_glitch.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="screen shake whole screen jolts on a beat">
   <div class="pic"><canvas data-fx="A15"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A15</span> Screen shake</h3>
   <p>Whole screen jolts on a beat</p>
   <details><summary>How</summary><p>Change <code>$d011</code> YSCROLL bits (keep bit 4 and bit 3) for a few frames; clamp to 0-7</p></details>
-  <p class="meta">CPU: 0 · <code>irq_bottom</code></p>
+  <p class="meta">CPU: 0 · <code>irq_bottom</code> · example: <a href="examples/A15_screen_shake.asm"><code>A15_screen_shake.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="logo colour themes opencode logo in brand colours">
   <div class="pic"><canvas data-fx="A16"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A16</span> Logo colour themes</h3>
   <p>Opencode logo in brand colours</p>
   <details><summary>How</summary><p>Edit <code>logo_gradient</code> / <code>shine_gradient</code></p></details>
-  <p class="meta">CPU: 0 · data</p>
+  <p class="meta">CPU: 0 · data · example: <a href="examples/A16_logo_themes.asm"><code>A16_logo_themes.asm</code></a></p>
 </article>
 <article class="card" data-tier="A" data-text="greetings list rotating group/sponsor names">
   <div class="pic"><canvas data-fx="A17"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A17</span> Greetings list</h3>
   <p>Rotating group/sponsor names</p>
   <details><summary>How</summary><p>Text table + A10 wipe every N seconds</p></details>
-  <p class="meta">CPU: small · new mini-part</p>
+  <p class="meta">CPU: small · new mini-part · example: <a href="examples/A17_greetings.asm"><code>A17_greetings.asm</code></a></p>
 </article></div></section>
 <section id="tierB" class="tier"><h2>Tier B — small routines (29)</h2><p class="lead">New routine or jitter-tolerant raster IRQ; prepare beforehand. Previews are browser simulations in the C64 palette, not C64 code.</p><div class="grid"><article class="card" data-tier="B" data-text="2x2 scroller big scroller, letters 2 chars wide/high">
   <div class="pic"><canvas data-fx="B1"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B1</span> 2x2 scroller</h3>
   <p>Big scroller, letters 2 chars wide/high</p>
   <details><summary>How</summary><p>Each letter = 4 chars from a 2x2 charset. Shift every 2 steps of the fine scroll</p></details>
-  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:2x2_sidescroll">base:2x2_sidescroll</a></code></p>
+  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:2x2_sidescroll">base:2x2_sidescroll</a></code> · example: <a href="examples/B01_2x2_scroller.asm"><code>B01_2x2_scroller.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="up-scroller (credits roll) text scrolls upwards">
   <div class="pic"><canvas data-fx="B2"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B2</span> Up-scroller (credits roll)</h3>
   <p>Text scrolls upwards</p>
   <details><summary>How</summary><p><code>$d011</code> YSCROLL 7→0, then move rows up one char line (double buffer to avoid tearing)</p></details>
-  <p class="meta">CPU: ~3k on move · <code><a href="https://codebase64.net/doku.php?id=base:1x1_upscroll">base:1x1_upscroll</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:2x2_upscroll_with_space_linefeed">base:2x2_upscroll_with_space_linefeed</a></code></p>
+  <p class="meta">CPU: ~3k on move · <code><a href="https://codebase64.net/doku.php?id=base:1x1_upscroll">base:1x1_upscroll</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:2x2_upscroll_with_space_linefeed">base:2x2_upscroll_with_space_linefeed</a></code> · example: <a href="examples/B02_up_scroller.asm"><code>B02_up_scroller.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="8x char zoom scroller huge letters made of chars">
   <div class="pic"><canvas data-fx="B3"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B3</span> 8x char zoom scroller</h3>
   <p>Huge letters made of chars</p>
   <details><summary>How</summary><p>Read ROM font bits, plot $a0/$20 per bit into a 8-row band</p></details>
-  <p class="meta">CPU: ~4k · <code><a href="https://codebase64.net/doku.php?id=base:8x_scale_charset_scrolling_message">base:8x_scale_charset_scrolling_message</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:realtime_8x_char_zoom">base:realtime_8x_char_zoom</a></code></p>
+  <p class="meta">CPU: ~4k · <code><a href="https://codebase64.net/doku.php?id=base:8x_scale_charset_scrolling_message">base:8x_scale_charset_scrolling_message</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:realtime_8x_char_zoom">base:realtime_8x_char_zoom</a></code> · example: <a href="examples/B03_8x_zoom_scroller.asm"><code>B03_8x_zoom_scroller.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="sprite scroller scroller in sprites, can go in the border">
   <div class="pic"><canvas data-fx="B4"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B4</span> Sprite scroller</h3>
   <p>Scroller in sprites, can go in the border</p>
   <details><summary>How</summary><p>ROL a sprite strip, one bit per frame per row</p></details>
-  <p class="meta">CPU: ~3k · <code><a href="https://codebase64.net/doku.php?id=base:scrolltext_using_sprites">base:scrolltext_using_sprites</a></code></p>
+  <p class="meta">CPU: ~3k · <code><a href="https://codebase64.net/doku.php?id=base:scrolltext_using_sprites">base:scrolltext_using_sprites</a></code> · example: <a href="examples/B04_sprite_scroller.asm"><code>B04_sprite_scroller.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="waving sprite letters one letter per sprite on a sine">
   <div class="pic"><canvas data-fx="B5"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B5</span> Waving sprite letters</h3>
   <p>One letter per sprite on a sine</p>
   <details><summary>How</summary><p>Sprite pointers = letter shapes; Y from sine table</p></details>
-  <p class="meta">CPU: ~1k · <code><a href="https://codebase64.net/doku.php?id=base:waving_sprite_scroll">base:waving_sprite_scroll</a></code>, our <code>examples/04</code></p>
+  <p class="meta">CPU: ~1k · <code><a href="https://codebase64.net/doku.php?id=base:waving_sprite_scroll">base:waving_sprite_scroll</a></code>, our <code>examples/04</code> · example: <a href="examples/B05_waving_sprite_letters.asm"><code>B05_waving_sprite_letters.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="sprite snake / lissajous 8 sprites chase each other">
   <div class="pic"><canvas data-fx="B6"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B6</span> Sprite snake / Lissajous</h3>
   <p>8 sprites chase each other</p>
   <details><summary>How</summary><p>Two sine tables with different speeds (our <code>examples/04</code>)</p></details>
-  <p class="meta">CPU: ~1k · done as example</p>
+  <p class="meta">CPU: ~1k · done as example · example: <a href="examples/B06_sprite_snake.asm"><code>B06_sprite_snake.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="sprite stretching sprites grow taller line by line">
   <div class="pic"><canvas data-fx="B7"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B7</span> Sprite stretching</h3>
   <p>Sprites grow taller line by line</p>
   <details><summary>How</summary><p>Toggle <code>$d017</code> per raster line while the sprite is shown (needs per-line IRQ or a loop in the border)</p></details>
-  <p class="meta">CPU: ~1 line each · <code><a href="https://codebase64.net/doku.php?id=base:stretching_sprites">base:stretching_sprites</a></code></p>
+  <p class="meta">CPU: ~1 line each · <code><a href="https://codebase64.net/doku.php?id=base:stretching_sprites">base:stretching_sprites</a></code> · example: <a href="examples/B07_sprite_stretch.asm"><code>B07_sprite_stretch.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="8-sprite starfield stars moving sideways">
   <div class="pic"><canvas data-fx="B8"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B8</span> 8-sprite starfield</h3>
   <p>Stars moving sideways</p>
   <details><summary>How</summary><p>8 one-pixel sprites, multiplexed down the screen at different speeds</p></details>
-  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:8_sprite_starfield">base:8_sprite_starfield</a></code></p>
+  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:8_sprite_starfield">base:8_sprite_starfield</a></code> · example: <a href="examples/B08_sprite_starfield.asm"><code>B08_sprite_starfield.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="char starfield parallax stars behind text">
   <div class="pic"><canvas data-fx="B9"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B9</span> Char starfield</h3>
   <p>Parallax stars behind text</p>
   <details><summary>How</summary><p>Stars = pixels in a few chars, ROL the char bytes; or switch <code>$d018</code> between 8 pre-shifted charsets</p></details>
-  <p class="meta">CPU: ~0.5k · <code><a href="https://codebase64.net/doku.php?id=base:rol_starfield_using_d018">base:rol_starfield_using_d018</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:starfield">base:starfield</a></code></p>
+  <p class="meta">CPU: ~0.5k · <code><a href="https://codebase64.net/doku.php?id=base:rol_starfield_using_d018">base:rol_starfield_using_d018</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:starfield">base:starfield</a></code> · example: <a href="examples/B09_char_starfield.asm"><code>B09_char_starfield.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="dycp scroller letters each bounce on their own sine">
   <div class="pic"><canvas data-fx="B10"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B10</span> DYCP</h3>
   <p>Scroller letters each bounce on their own sine</p>
   <details><summary>How</summary><p>Plot each letter&#x27;s 8 bytes into a 2-char-high column charset at Y = <code>sine[x+t]</code></p></details>
-  <p class="meta">CPU: ~6-8k · C= Hacking 6 &quot;Demo corner&quot; (<code><a href="https://codebase64.net/doku.php?id=magazines:chacking6">magazines:chacking6</a></code>)</p>
+  <p class="meta">CPU: ~6-8k · C= Hacking 6 &quot;Demo corner&quot; (<code><a href="https://codebase64.net/doku.php?id=magazines:chacking6">magazines:chacking6</a></code>) · example: <a href="examples/B10_dycp.asm"><code>B10_dycp.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="colour plasma smooth flowing colours">
   <div class="pic"><canvas data-fx="B11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B11</span> Colour plasma</h3>
   <p>Smooth flowing colours</p>
   <details><summary>How</summary><p>Colour RAM = <code>pal[sin1[x+a]+sin2[y+b]+sin3[x+y+c]]</code>, half the screen per frame or a 20x12 window</p></details>
-  <p class="meta">CPU: ~10k full screen · <code><a href="https://codebase64.net/doku.php?id=base:colorcycleplasma">base:colorcycleplasma</a></code></p>
+  <p class="meta">CPU: ~10k full screen · <code><a href="https://codebase64.net/doku.php?id=base:colorcycleplasma">base:colorcycleplasma</a></code> · example: <a href="examples/B11_colour_plasma.asm"><code>B11_colour_plasma.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="charset plasma finer plasma with shading">
   <div class="pic"><canvas data-fx="B12"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B12</span> Charset plasma</h3>
   <p>Finer plasma with shading</p>
   <details><summary>How</summary><p>Screen = plasma index, charset of 8-16 dither shades</p></details>
-  <p class="meta">CPU: ~8k · same + <code><a href="https://codebase64.net/doku.php?id=base:4x4_fli_chunky_mode">base:4x4_fli_chunky_mode</a></code> idea</p>
+  <p class="meta">CPU: ~8k · same + <code><a href="https://codebase64.net/doku.php?id=base:4x4_fli_chunky_mode">base:4x4_fli_chunky_mode</a></code> idea · example: <a href="examples/B12_charset_plasma.asm"><code>B12_charset_plasma.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="fire burning flames rising">
   <div class="pic"><canvas data-fx="B13"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B13</span> Fire</h3>
   <p>Burning flames rising</p>
   <details><summary>How</summary><p>4x4 chunky pixels in chars, average 3 neighbours + decay, random bottom row</p></details>
-  <p class="meta">CPU: ~8k · <code><a href="https://codebase64.net/doku.php?id=base:4x4_charset_fire_with_lots_of_colors">base:4x4_charset_fire_with_lots_of_colors</a></code></p>
+  <p class="meta">CPU: ~8k · <code><a href="https://codebase64.net/doku.php?id=base:4x4_charset_fire_with_lots_of_colors">base:4x4_charset_fire_with_lots_of_colors</a></code> · example: <a href="examples/B13_fire.asm"><code>B13_fire.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="matrix rain falling green glyphs">
   <div class="pic"><canvas data-fx="B14"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B14</span> Matrix rain</h3>
   <p>Falling green glyphs</p>
   <details><summary>How</summary><p>Per-column drop position; head white, tail fades through <code>13,5,11</code></p></details>
-  <p class="meta">CPU: ~2k · —</p>
+  <p class="meta">CPU: ~2k · — · example: <a href="examples/B14_matrix_rain.asm"><code>B14_matrix_rain.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="logo swing logo sways left/right">
   <div class="pic"><canvas data-fx="B15"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B15</span> Logo swing</h3>
   <p>Logo sways left/right</p>
   <details><summary>How</summary><p>Per char-row <code>$d016</code> change in a raster IRQ (char rows only, so jitter is harmless if done in the row&#x27;s last line)</p></details>
-  <p class="meta">CPU: ~0.5k · <code><a href="https://codebase64.net/doku.php?id=base:logo_swing">base:logo_swing</a></code></p>
+  <p class="meta">CPU: ~0.5k · <code><a href="https://codebase64.net/doku.php?id=base:logo_swing">base:logo_swing</a></code> · example: <a href="examples/B15_logo_swing.asm"><code>B15_logo_swing.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="fld bounce logo/screen drops and bounces">
   <div class="pic"><canvas data-fx="B16"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B16</span> FLD bounce</h3>
   <p>Logo/screen drops and bounces</p>
   <details><summary>How</summary><p>Delay the badline by rewriting <code>$d011</code> each line for N lines; N follows a bounce table</p></details>
-  <p class="meta">CPU: N lines · <code><a href="https://codebase64.net/doku.php?id=base:fld">base:fld</a></code></p>
+  <p class="meta">CPU: N lines · <code><a href="https://codebase64.net/doku.php?id=base:fld">base:fld</a></code> · example: <a href="examples/B16_fld_bounce.asm"><code>B16_fld_bounce.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="open top/bottom border sprites in the top and bottom borders">
   <div class="pic"><canvas data-fx="B17"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B17</span> Open top/bottom border</h3>
   <p>Sprites in the top and bottom borders</p>
   <details><summary>How</summary><p>At line <code>$f9</code> set 24 rows (<code>$d011</code> bit 3 = 0), back to 25 before line <code>$fc</code></p></details>
-  <p class="meta">CPU: ~0 · <code><a href="https://codebase64.net/doku.php?id=base:removing_the_top_bottom_border">base:removing_the_top_bottom_border</a></code></p>
+  <p class="meta">CPU: ~0 · <code><a href="https://codebase64.net/doku.php?id=base:removing_the_top_bottom_border">base:removing_the_top_bottom_border</a></code> · example: <a href="examples/B17_open_border.asm"><code>B17_open_border.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="raster split curtains coloured background bands behind text">
   <div class="pic"><canvas data-fx="B18"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B18</span> Raster split curtains</h3>
   <p>Coloured background bands behind text</p>
   <details><summary>How</summary><p><code>$d021</code> changes at a few lines via raster IRQs (between text rows)</p></details>
-  <p class="meta">CPU: ~0.2k · <code><a href="https://codebase64.net/doku.php?id=base:horizontal_raster_split">base:horizontal_raster_split</a></code></p>
+  <p class="meta">CPU: ~0.2k · <code><a href="https://codebase64.net/doku.php?id=base:horizontal_raster_split">base:horizontal_raster_split</a></code> · example: <a href="examples/B18_raster_split.asm"><code>B18_raster_split.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="rasterbars behind text bars visible through text background">
   <div class="pic"><canvas data-fx="B19"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B19</span> Rasterbars behind text</h3>
   <p>Bars visible through text background</p>
   <details><summary>How</summary><p><code>$d021</code> per line with a stable loop, but only on non-badlines; simplest with bars in the border or with DEN=0 areas</p></details>
-  <p class="meta">CPU: many lines · <code><a href="https://codebase64.net/doku.php?id=base:rasterbars_with_screen_on">base:rasterbars_with_screen_on</a></code></p>
+  <p class="meta">CPU: many lines · <code><a href="https://codebase64.net/doku.php?id=base:rasterbars_with_screen_on">base:rasterbars_with_screen_on</a></code> · example: <a href="examples/B19_bars_behind_text.asm"><code>B19_bars_behind_text.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="overlapping bars bars passing in front/behind each other">
   <div class="pic"><canvas data-fx="B20"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B20</span> Overlapping bars</h3>
   <p>Bars passing in front/behind each other</p>
   <details><summary>How</summary><p>Draw bars into the table back to front, sorted by a depth sine</p></details>
-  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:overlapping_raster_bars">base:overlapping_raster_bars</a></code></p>
+  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:overlapping_raster_bars">base:overlapping_raster_bars</a></code> · example: <a href="examples/B20_overlapping_bars.asm"><code>B20_overlapping_bars.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="charset blend-in logo/picture dissolves in pixel by pixel">
   <div class="pic"><canvas data-fx="B21"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B21</span> Charset blend-in</h3>
   <p>Logo/picture dissolves in pixel by pixel</p>
   <details><summary>How</summary><p>AND/OR random masks onto the charset bytes over frames</p></details>
-  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:8x8_charset_pixel-blend-in">base:8x8_charset_pixel-blend-in</a></code></p>
+  <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:8x8_charset_pixel-blend-in">base:8x8_charset_pixel-blend-in</a></code> · example: <a href="examples/B21_charset_blend.asm"><code>B21_charset_blend.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="ecm note writer text with 4 background colours, flashing">
   <div class="pic"><canvas data-fx="B22"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B22</span> ECM note writer</h3>
   <p>Text with 4 background colours, flashing</p>
   <details><summary>How</summary><p>Extended Colour Mode (<code>$d011</code> bit 6), cycle <code>$d021-$d024</code></p></details>
-  <p class="meta">CPU: ~0 · <code><a href="https://codebase64.net/doku.php?id=base:colour_flashing_notewriter_style">base:colour_flashing_notewriter_style</a></code></p>
+  <p class="meta">CPU: ~0 · <code><a href="https://codebase64.net/doku.php?id=base:colour_flashing_notewriter_style">base:colour_flashing_notewriter_style</a></code> · example: <a href="examples/B22_ecm_notewriter.asm"><code>B22_ecm_notewriter.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="3d dot ball / dot scroll rotating sphere or text made of dots">
   <div class="pic"><canvas data-fx="B23"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B23</span> 3D dot ball / dot scroll</h3>
   <p>Rotating sphere or text made of dots</p>
   <details><summary>How</summary><p>Precalculate rotated points (no multiply at run time), plot into a charset canvas, double buffer</p></details>
-  <p class="meta">CPU: ~10k · <code><a href="https://codebase64.net/doku.php?id=base:3d_dot_scroll">base:3d_dot_scroll</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:dots_and_plots">base:dots_and_plots</a></code></p>
+  <p class="meta">CPU: ~10k · <code><a href="https://codebase64.net/doku.php?id=base:3d_dot_scroll">base:3d_dot_scroll</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:dots_and_plots">base:dots_and_plots</a></code> · example: <a href="examples/B23_dot_ball.asm"><code>B23_dot_ball.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="vector bobs 3d object made of sprites">
   <div class="pic"><canvas data-fx="B24"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B24</span> Vector bobs</h3>
   <p>3D object made of sprites</p>
   <details><summary>How</summary><p>8 sprites (or multiplexed) at precalculated 3D projected positions</p></details>
-  <p class="meta">CPU: ~2k · precalc in Python</p>
+  <p class="meta">CPU: ~2k · precalc in Python · example: <a href="examples/B24_vector_bobs.asm"><code>B24_vector_bobs.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="rotozoomer / tunnel (chunky) rotating, zooming texture or tunnel">
   <div class="pic"><canvas data-fx="B25"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B25</span> Rotozoomer / tunnel (chunky)</h3>
   <p>Rotating, zooming texture or tunnel</p>
   <details><summary>How</summary><p>Precalculated u/v lookup tables in a 40x25 or 20x12 char window, colour RAM output</p></details>
-  <p class="meta">CPU: ~10-15k, 25 fps · —</p>
+  <p class="meta">CPU: ~10-15k, 25 fps · — · example: <a href="examples/B25_tunnel.asm"><code>B25_tunnel.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="simple sprite multiplexer 16-24 sprites on screen">
   <div class="pic"><canvas data-fx="B26"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B26</span> Simple sprite multiplexer</h3>
   <p>16-24 sprites on screen</p>
   <details><summary>How</summary><p>Re-use sprites lower down in raster IRQs, fixed Y bands (no sorting)</p></details>
-  <p class="meta">CPU: ~1k · <code><a href="https://codebase64.net/doku.php?id=base:sprite_multiplexing">base:sprite_multiplexing</a></code></p>
+  <p class="meta">CPU: ~1k · <code><a href="https://codebase64.net/doku.php?id=base:sprite_multiplexing">base:sprite_multiplexing</a></code> · example: <a href="examples/B26_sprite_multiplexer.asm"><code>B26_sprite_multiplexer.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="animated sprite logo big multicolour logo built from sprites">
   <div class="pic"><canvas data-fx="B27"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B27</span> Animated sprite logo</h3>
   <p>Big multicolour logo built from sprites</p>
   <details><summary>How</summary><p>8 sprites expanded side by side, colours cycled</p></details>
-  <p class="meta">CPU: ~0.2k · <code><a href="https://codebase64.net/doku.php?id=base:spriteintro">base:spriteintro</a></code></p>
+  <p class="meta">CPU: ~0.2k · <code><a href="https://codebase64.net/doku.php?id=base:spriteintro">base:spriteintro</a></code> · example: <a href="examples/B27_sprite_logo.asm"><code>B27_sprite_logo.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="part sequencer many parts with timed transitions">
   <div class="pic"><canvas data-fx="B28"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B28</span> Part sequencer</h3>
   <p>Many parts with timed transitions</p>
   <details><summary>How</summary><p>Table <code>(frames, init, frame)</code> (see 04, &quot;Parts&quot;)</p></details>
-  <p class="meta">CPU: ~0 · <code>main_loop</code></p>
+  <p class="meta">CPU: ~0 · <code>main_loop</code> · example: <a href="examples/B28_part_sequencer.asm"><code>B28_part_sequencer.asm</code></a></p>
 </article>
 <article class="card" data-tier="B" data-text="music sync flashes and bounces hit the beat">
   <div class="pic"><canvas data-fx="B29"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B29</span> Music sync</h3>
   <p>Flashes and bounces hit the beat</p>
   <details><summary>How</summary><p>Beat table of frame numbers, or read voice 3 envelope <code>$d41c</code> if the tune uses voice 3 for drums</p></details>
-  <p class="meta">CPU: ~0 · <code>irq_bottom</code></p>
+  <p class="meta">CPU: ~0 · <code>irq_bottom</code> · example: <a href="examples/B29_music_sync.asm"><code>B29_music_sync.asm</code></a></p>
 </article></div></section>
 <section id="tierC" class="tier"><h2>Tier C — cycle-exact / heavy (12)</h2><p class="lead">Stable raster on every line, big tables; prepare off-stage, test on hardware. Previews are browser simulations in the C64 palette, not C64 code.</p><div class="grid"><article class="card" data-tier="C" data-text="side-border opening graphics/sprites across the full width">
   <div class="pic"><canvas data-fx="C1"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C1</span> Side-border opening</h3>
   <p>Graphics/sprites across the full width</p>
   <details><summary>How</summary><p><code>$d016</code> toggle on an exact cycle on <b>every</b> line, sprite and badline aware</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:removing_the_sideborders">base:removing_the_sideborders</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:sprites_in_bottom_sideborder">base:sprites_in_bottom_sideborder</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:removing_the_sideborders">base:removing_the_sideborders</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:sprites_in_bottom_sideborder">base:sprites_in_bottom_sideborder</a></code> · example: <a href="examples/C01_side_border.asm"><code>C01_side_border.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="tech-tech logo waves pixel by pixel per raster line">
   <div class="pic"><canvas data-fx="C2"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C2</span> Tech-tech</h3>
   <p>Logo waves pixel by pixel per raster line</p>
   <details><summary>How</summary><p>Per-line <code>$d016</code> + charset/screen switch, stable raster</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=magazines:chacking7">magazines:chacking7</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:techtech_fli">base:techtech_fli</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=magazines:chacking7">magazines:chacking7</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:techtech_fli">base:techtech_fli</a></code> · example: <a href="examples/C02_tech_tech.asm"><code>C02_tech_tech.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="dysp sprite letters moving on independent x/y sines across the border">
   <div class="pic"><canvas data-fx="C3"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C3</span> DYSP</h3>
   <p>Sprite letters moving on independent X/Y sines across the border</p>
   <details><summary>How</summary><p>Per-line sprite register writes with a cycle table</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:dysp_d017">base:dysp_d017</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:dysp_cycle_table">base:dysp_cycle_table</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:dysp_d017">base:dysp_d017</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:dysp_cycle_table">base:dysp_cycle_table</a></code> · example: <a href="examples/C03_dysp.asm"><code>C03_dysp.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="fpp / stretcher picture stretched and bent vertically">
   <div class="pic"><canvas data-fx="C4"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C4</span> FPP / stretcher</h3>
   <p>Picture stretched and bent vertically</p>
   <details><summary>How</summary><p>Repeat or pick any graphics line per raster line</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fpp">base:fpp</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:fli-fpp-scroller">base:fli-fpp-scroller</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fpp">base:fpp</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:fli-fpp-scroller">base:fli-fpp-scroller</a></code> · example: <a href="examples/C04_fpp_stretcher.asm"><code>C04_fpp_stretcher.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="line crunch / vsp / agsp hardware scroll of the whole screen with no copying">
   <div class="pic"><canvas data-fx="C5"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C5</span> Line crunch / VSP / AGSP</h3>
   <p>Hardware scroll of the whole screen with no copying</p>
   <details><summary>How</summary><p>VIC timing quirks; VSP crashes some real machines</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:linecrunch">base:linecrunch</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:horizontal_screen_positioning_hsp">base:horizontal_screen_positioning_hsp</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:agsp_any_given_screen_position">base:agsp_any_given_screen_position</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:linecrunch">base:linecrunch</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:horizontal_screen_positioning_hsp">base:horizontal_screen_positioning_hsp</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:agsp_any_given_screen_position">base:agsp_any_given_screen_position</a></code> · example: <a href="examples/C05_line_crunch.asm"><code>C05_line_crunch.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="fli / afli pictures pictures with far more colours">
   <div class="pic"><canvas data-fx="C6"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C6</span> FLI / AFLI pictures</h3>
   <p>Pictures with far more colours</p>
   <details><summary>How</summary><p><code>$d018</code>/<code>$d011</code> every line, 16 KB data, own VIC bank</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fli">base:fli</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:fli_displayer">base:fli_displayer</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fli">base:fli</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:fli_displayer">base:fli_displayer</a></code> · example: <a href="examples/C06_fli.asm"><code>C06_fli.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="twister / x-rotator / waving carpet rotating bar of graphics">
   <div class="pic"><canvas data-fx="C7"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C7</span> Twister / X-rotator / waving carpet</h3>
   <p>Rotating bar of graphics</p>
   <details><summary>How</summary><p>2nd-line FLI tricks</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:twisters_x-rotators_and_waving_carpets">base:twisters_x-rotators_and_waving_carpets</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:twisters_x-rotators_and_waving_carpets">base:twisters_x-rotators_and_waving_carpets</a></code> · example: <a href="examples/C07_twister.asm"><code>C07_twister.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="filled 3d vectors solid rotating objects">
   <div class="pic"><canvas data-fx="C8"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C8</span> Filled 3D vectors</h3>
   <p>Solid rotating objects</p>
   <details><summary>How</summary><p>Fast line + fill routines, double-buffered charset or bitmap</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:filling_the_vectors">base:filling_the_vectors</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:spritevectors">base:spritevectors</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:filling_the_vectors">base:filling_the_vectors</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:spritevectors">base:spritevectors</a></code> · example: <a href="examples/C08_filled_vectors.asm"><code>C08_filled_vectors.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="perspective &quot;disco floor&quot; scroller scroller on a 3d floor">
   <div class="pic"><canvas data-fx="C9"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C9</span> Perspective &quot;disco floor&quot; scroller</h3>
   <p>Scroller on a 3D floor</p>
   <details><summary>How</summary><p>Per-line tables</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:discofloor_scroller_as_being_used_in_aechzzeit">base:discofloor_scroller_as_being_used_in_aechzzeit</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:discofloor_scroller_as_being_used_in_aechzzeit">base:discofloor_scroller_as_being_used_in_aechzzeit</a></code> · example: <a href="examples/C09_disco_floor.asm"><code>C09_disco_floor.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="sprite crunching / sprite fpp bigger or distorted sprites">
   <div class="pic"><canvas data-fx="C10"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C10</span> Sprite crunching / sprite FPP</h3>
   <p>Bigger or distorted sprites</p>
   <details><summary>How</summary><p>Exact <code>$d017</code> writes inside the sprite DMA</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:sprite-crunching">base:sprite-crunching</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:sprite_fpp">base:sprite_fpp</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:sprite-crunching">base:sprite-crunching</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:sprite_fpp">base:sprite_fpp</a></code> · example: <a href="examples/C10_sprite_fpp.asm"><code>C10_sprite_fpp.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="digi samples speech/drum samples (&quot;hello codeurs en seine!&quot;)">
   <div class="pic"><canvas data-fx="C11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C11</span> Digi samples</h3>
   <p>Speech/drum samples (&quot;hello codeurs en seine!&quot;)</p>
   <details><summary>How</summary><p>4-bit writes to <code>$d418</code> at 4-8 kHz via NMI; sounds different on 6581/8580</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:sid_programming">base:sid_programming</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:sid_programming">base:sid_programming</a></code> · example: <a href="examples/C11_digi.asm"><code>C11_digi.asm</code></a></p>
 </article>
 <article class="card" data-tier="C" data-text="fullscreen bitmap demo parts effects running over the whole bitmap">
   <div class="pic"><canvas data-fx="C12"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C12</span> Fullscreen bitmap demo parts</h3>
   <p>Effects running over the whole bitmap</p>
   <details><summary>How</summary><p>Combination of C1 + bitmap speedcode</p></details>
-  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fullscreen">base:fullscreen</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:speedcode">base:speedcode</a></code></p>
+  <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fullscreen">base:fullscreen</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:speedcode">base:speedcode</a></code> · example: <a href="examples/C12_fullscreen_bitmap.asm"><code>C12_fullscreen_bitmap.asm</code></a></p>
 </article></div></section>
 </main>
 <footer>Sources: Codebase64 wiki (CC BY-NC-SA 4.0), C= Hacking "Demo corner", CSDb.

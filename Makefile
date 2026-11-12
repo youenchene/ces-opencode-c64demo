@@ -19,7 +19,7 @@ DEMO      := $(BUILD)/opencode.prg
 D64       := $(BUILD)/opencode.d64
 EXAMPLES  := $(patsubst docs/examples/%.asm,$(BUILD)/examples/%.prg,$(wildcard docs/examples/*.asm))
 
-.PHONY: all demo examples gfx gifs effects-page d64 run run-example packed shots clean
+.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-example packed shots clean
 
 all: demo examples
 
@@ -84,6 +84,10 @@ gifs: all
 	$(CAP) $(BUILD)/examples/02_stable_raster_bars.prg $(GIFS)/ex-stable-bars.gif --start 6000000 --frames 32 --step 2 --scale 2
 	$(CAP) $(BUILD)/examples/03_smooth_scroller.prg $(GIFS)/ex-scroller.gif --start 6000000 --frames 32 --step 1 --crop 0,220,384,22
 	$(CAP) $(BUILD)/examples/04_sprites_sine.prg $(GIFS)/ex-sprites-sine.gif --start 6000000 --frames 32 --step 1 --scale 2
+
+# Smoke test: every example draws something and animates (results in build/check/)
+check-examples: examples
+	tools/check_examples.sh
 
 # docs/effects.html: visual catalogue (implemented effects = GIFs above, library = docs/08)
 effects-page:

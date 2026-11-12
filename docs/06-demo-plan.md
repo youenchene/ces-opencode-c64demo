@@ -82,22 +82,7 @@ Edit `assets/rouen.txt` in any text editor: keep it 320 columns × 80 lines.
 5. Lit windows twinkling in the skyline (colour RAM changes only, no new tiles).
 6. Open top/bottom border with sprites in it.
 
-## Live presentation script (fast model, short prompts)
+## Live presentation
 
-The demo should already run before going on stage (`make d64`, copied to the SD card). Each live step
-is one short prompt, finishing in under about 30 s including `make run`:
-
-| # | Prompt (example) | Expected change |
-|---|---|---|
-| 1 | "Change the scroller text to say hello to the Codeurs en Seine audience" | `scroll_text` in `src/main.asm` |
-| 2 | "Make the copper bars red and white" | `bars` table |
-| 3 | "Add a line to the typer: `> can you run on a C64?` / `  you're looking at it.`" | `typer_text` (13 rows max) |
-| 4 | "Make the Seine shimmer faster" | `water_colors` (`and #1` → every frame) |
-| 5 | "Add a boat on the Seine in assets/rouen.txt" | edit ASCII art + `make gfx` (watch the 159-tile limit) |
-| 6 | "Make the scroller twice as fast" | `sbc #1` → `sbc #2` in `scroller_update` |
-
-Tips:
-- Run `make run` (VICE) to show the result instantly. Copy the D64 to the real C64 only at the end, or show
-  the real machine running the pre-built version.
-- Keep a git tag of the working demo (`git tag stage-ready`) to `git checkout` back to if a live edit breaks.
-- Timing-critical code (`irq_bars*`) is fragile. Avoid live edits there.
+The stage scenario (acts, exact prompts, fallbacks, setup, rehearsal log) lives in
+[`docs/opencode/`](opencode/README.md).

@@ -69,6 +69,31 @@ x64sc -moncommands build/opencode.sym ...          # load labels into the monito
 
 ## Headless checking (for agents)
 
+### Repo-local VICE MCP
+
+`opencode.json` enables [vice-mcp](https://github.com/simen/vice-mcp) for this
+repository only. Its installation lives in the git-ignored `.opencode/vice-mcp/`.
+To install it again on another checkout:
+
+```sh
+git clone https://github.com/simen/vice-mcp.git .opencode/vice-mcp
+git -C .opencode/vice-mcp checkout d06d2ef71d31e7b5cb4876cdb2c8e6e28c665aeb
+npm --prefix .opencode/vice-mcp install
+npm --prefix .opencode/vice-mcp audit fix
+npm --prefix .opencode/vice-mcp run build
+opencode mcp list
+```
+
+Start the emulator with its binary monitor bound to localhost before using the
+MCP `connect` tool (default endpoint `127.0.0.1:6502`):
+
+```sh
+x64sc -pal -binarymonitor -binarymonitoraddress ip4://127.0.0.1:6502 \
+      -autostartprgmode 1 -autostart build/opencode.prg
+```
+
+### Screenshot checks
+
 `make shots` screenshots every PRG and prints a text summary for each raster row, using `tools/pngsum.py`:
 the border colour, the dominant background colour and the number of other pixels (`fg`). A
 stable raster bar should show `fg=0` on each line. If the colour changes partway through a line,

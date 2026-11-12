@@ -20,7 +20,7 @@ The demo loops over two parts: **"ces"** (Codeurs en Seine logo + Rouen skyline 
 | `assets/sid/` | Candidate SID tunes from HVSC (electro shortlist + classics). `assets/sid/README.md` lists load/init/play addresses, SID model, zero-page clashes and whether each fits. Copyrighted: don't ship without permission. |
 | `include/c64.asm` | Shared hardware constants and macros (`basic_upstart`, `demo_init`, `set_irq`, `irq_enter/exit`, `fill_1000`). |
 | `docs/` | All documentation, **read the relevant file before coding**. Index: `docs/README.md`. |
-| `docs/examples/` | Small standalone examples, one technique each. Built by `make examples`. |
+| `docs/examples/` | Standalone examples: `00-04` basics, plus one per library effect (`A01`…`C12`, IDs from `docs/08`). Read the matching one before integrating an effect; check its `Limitations:` header. Built by `make examples`. |
 | `tools/img2chars.py` | Converts SVG/PNG/ASCII art into a charset slice + screen map (see its docstring). |
 | `tools/pngsum.py` | Turns a VICE screenshot into a text summary, used for headless checks. |
 | `build/` | Generated output (git-ignored). |
@@ -33,6 +33,7 @@ make run          # launch demo in VICE (x64sc, PAL)
 make run-example EX=02_stable_raster_bars
 make d64          # build/opencode.d64 for real hardware
 make shots        # headless: screenshot each PRG after ~9M cycles + text summary
+make check-examples  # headless smoke test of every docs/examples PRG (blank / static / ok)
 make gfx          # regenerate src/gfx/*.asm from assets/ (needs rsvg-convert for the SVG)
 make MUSIC=1      # include src/music/music.sid
 ```
@@ -85,7 +86,8 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
 - `docs/03-executable-basics.md`: PRG format, BASIC upstart, taking over the machine, IRQ setup
 - `docs/04-demo-effects.md`: catalogue of demo effects and how they work (with examples)
 - `docs/05-music.md`: SID music integration
-- `docs/06-demo-plan.md`: the demo's structure, memory map, and the live presentation script
+- `docs/06-demo-plan.md`: the demo's structure and memory map
+- `docs/opencode/`: the live presentation scenario (prompts, fallback branches, setup, rehearsal log)
 - `docs/07-real-hardware.md`: moving the demo to a real C64
 - `docs/effects.html`: generated visual catalogue (`make gifs` then `make effects-page`); edit `docs/08` or
   `tools/effects_page.py`/`.js`, never the HTML. When an effect gets implemented, add a capture to the
