@@ -1,4 +1,4 @@
-# opencode features worth trying (not used yet)
+# opencode features worth trying
 
 Checked against the opencode V2 docs (https://opencode.ai/docs/, November 2026). For each: what it is, why it
 helps this talk, how to set it up, and whether it's worth showing on stage. Config snippets go in
@@ -10,7 +10,7 @@ helps this talk, how to set it up, and whether it's worth showing on stage. Conf
 |---|---|---|---|
 | 1 | **Undo / redo with snapshots** | Safer and faster than `git checkout` when a live edit goes wrong | Yes: "the agent broke it, `/undo`, done" |
 | 2 | **Warming** | Keeps the provider prompt cache warm while you talk between acts → faster first token | Invisible, but makes every act snappier |
-| 3 | **Project commands** (`/check`, `/fx A12`) | One short word on screen instead of a long prompt; less typing on stage | Yes |
+| 3 | **Project command** (`/check`) | One short word runs the build and headless verification | Yes |
 | 4 | **Image attachments** | Paste a VICE screenshot: "the bars flicker on line 3, fix it" | Yes, if the stage model takes images |
 | 5 | **Project agent + skill for C64** | A `c64` agent with the fast model and the rules; a reviewer subagent that checks cycle counts | Yes (Act 3 variant) |
 | 6 | **`opencode stats`** | End the talk with the real cost and token count of the session | Yes, closing slide |
@@ -33,30 +33,12 @@ Keep the `stage/step-N` branches anyway: snapshots are a convenience, not a back
 Sends a tiny keep-alive request before the prompt cache expires, while you are talking. Costs a few tokens per
 interval; `"auto"` needs the model's `cache.ttl` to be known (otherwise use `"interval": "4 minutes"`).
 
-### 3. Project commands
+### 3. Project command
 
-`.opencode/commands/check.md`:
-
-```md
----
-description: Build and headless-check the demo
----
-Build and check the demo. Report errors and the per-line summary of the copper bars.
-
-!`make 2>&1 | tail -20 && make shots 2>&1 | grep -A40 'opencode.png'`
-```
-
-`.opencode/commands/fx.md` (usage `/fx A12`):
-
-```md
----
-description: Integrate a library effect into the demo
----
-Integrate effect $1 from docs/08-effects-library.md into src/main.asm, using the matching example in
-docs/examples/$1_*.asm. Follow AGENTS.md (zero page $20-$2d, data after DATA_START). Then run make.
-```
-
-Add `subagent: true` to a command to run it in a background child session (the parent stays free).
+Run `/check` from the repo. The [command](../../.opencode/commands/check.md) expands to a short
+prompt that loads [`c64-headless-check`](../../.opencode/skills/c64-headless-check/SKILL.md). It
+builds, checks a headless D07 capture, and reports what it saw without editing the demo or opening
+VICE. Rehearse the runtime before using it live: `make shots` captures the examples too.
 
 ### 4. Image attachments
 
@@ -80,8 +62,10 @@ Review the current diff of src/main.asm. Check: cycle counts in timed loops, pag
 zero page usage, data placed after DATA_START, row 13 text-only. Report findings by severity.
 ```
 
-A **skill** (`.opencode/skills/c64-effects/SKILL.md`) can hold the effect recipes and be loaded only when
-needed, instead of putting everything in `AGENTS.md`.
+The project already ships [`c64-effects`](../../.opencode/skills/c64-effects/SKILL.md). Try
+`@c64-effects How would A1 change the copper bars on D07? Don't edit anything.` The skill looks up
+the recipe and matching example, then explains the visible effect and the hook. To show automatic
+skill selection, try the same question without the `@c64-effects` mention.
 
 ### 6. `opencode stats`
 
