@@ -68,7 +68,7 @@ On stage, work on a throwaway branch: `git switch -c live stage-ready`. Recover 
 ## Day-of checklist
 
 - [ ] `git status` clean, `stage-ready` and all `stage/step-*` branches present
-- [ ] `make` clean, `make run` plays music, both parts visible
+- [ ] `make` clean, `make run` plays music and stays on the `ces` screen
 - [ ] opencode starts on the right model, network OK (and hotspot ready)
 - [ ] Fresh opencode session, font size set
 - [ ] VICE window placed, sound tested in the room

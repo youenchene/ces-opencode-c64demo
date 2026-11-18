@@ -6,17 +6,13 @@ It must run on a **real PAL C64**, loaded from a 1541 / SD2IEC / Kung Fu Flash.
 It is also the subject of a live presentation where opencode edits the demo on stage with a
 fast model. Keep every change small, quick to build and easy to verify.
 
-The demo loops over two parts: **"ces"** (Codeurs en Seine logo + Rouen skyline over the Seine) and
-**"opencode"** (block logo + simulated terminal session). Copper bars and the scroller are always on.
+The demo shows one screen, **"ces" (D07)**: Codeurs en Seine logo and Rouen skyline over the Seine.
+Copper bars and the scroller are always on.
 
 ## Route single-screen previews
 
-`Init demo with "Part "ces" (full screen)" (D07) screen and  launch vice.` is a **D07-only
-preview** request. For this or any equivalent request naming only D07, run `make run-d07`
-without editing files. D07 must remain visible for the entire preview, with no transition
-to D08. Use `make run` for the full two-part loop, or if the user explicitly asks to start
-on D07 and then continue to D08. If `make run-d07` fails, report the failure rather than
-falling back to `make run`.
+`Init demo with "Part "ces" (full screen)" (D07) screen and  launch vice.` is a preview request.
+Run `make run` without editing files. D07 is the only screen and stays visible throughout.
 
 ## Layout
 
@@ -39,7 +35,6 @@ falling back to `make run`.
 ```sh
 make              # demo + examples -> build/opencode.prg, build/examples/*.prg
 make run          # launch demo in VICE (x64sc, PAL)
-make run-d07      # launch the D07-only preview in VICE (never enters D08)
 make run-example EX=02_stable_raster_bars
 make d64          # build/opencode.d64 for real hardware
 make shots        # headless: screenshot each PRG after ~9M cycles + text summary
@@ -66,7 +61,7 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
 - IRQ chain per frame: `irq_bars1/2` (`$10`) → `irq_mid` (`$9d`, charset B) → `irq_split` (`$f0`)
   → `irq_bottom` (`$fc`, charset A, music, `frame_flag`). Each handler sets up the next one.
 - **Memory map** (`src/main.asm`): code `$0801-$0fff` (an `!error` guard enforces it), music
-  `$1000-$1fff`, charset A `$2000`, charset B `$2800`, **all data from `$3000`**, zero page `$f0-$fd`.
+  `$1000-$1fff`, charset A `$2000`, charset B `$2800`, **all data from `$3000`**, zero page `$20-$21`, `$2a-$2d`.
   New tables and texts go after `DATA_START`, not in the code area. Before adding big data, read
   `docs/02-c64-architecture.md` (VIC banks) and update the map in `docs/06-demo-plan.md`.
 - **Charsets**: codes `$00-$5f` are the ROM font (copied at start-up), `$60-$ff` are graphic tiles,
@@ -74,7 +69,6 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
   hold text or spaces**. Each charset has at most 159 tiles; `tools/img2chars.py` fails if an image needs more.
 - In texts, use `!scr` (screen codes). **Avoid `@`** (screen code 0 ends the text) and `{|}~`
   (codes `$5b-$5e`). Lowercase and uppercase letters, digits and normal punctuation are fine.
-  Typer control bytes are `$80-$8f` (colour), `$fd` (pause), `$fe` (newline), `$ff` (end).
 - Keep the PRG small and loadable with `LOAD"*",8` then `RUN` (BASIC upstart at `$0801`, `SYS 2061`).
 
 ## Checking a change (do this every time)
@@ -83,13 +77,12 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
 2. `make shots`, then read the `tools/pngsum.py` output (or open `build/shots/*.png`):
    - raster bars: one colour per line (`fg=0` on bar lines), nothing changing partway through a line;
    - text rows (y = 35 + row*8) have `fg>0` where text should appear.
-   - `make shots` shows the "ces" part (~9M cycles). To see the "opencode" part, take a shot at
-     ~30M cycles: `x64sc -console -pal -default +sound -warp -autostartprgmode 1 -limitcycles 30000000 -exitscreenshot build/shots/oc.png -autostart build/opencode.prg`.
+   - The demo screenshot shows D07 (~9M cycles).
 3. Timing-sensitive changes: check `build/opencode.lst` for page crossings
    (high byte of the address before and after a loop).
 4. Only the user can test on real hardware. Say so when a change depends on timing.
 5. **Automated VICE runs always use `-console`** (no window). Never open a VICE window during checks:
-   it steals focus from the user. Open a window via `make run`, `make run-d07`, or `make run-example` only when asked.
+   it steals focus from the user. Open a window via `make run` or `make run-example` only when asked.
 
 ## Documentation map
 

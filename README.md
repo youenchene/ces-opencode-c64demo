@@ -7,8 +7,6 @@ written in 6502 assembly and runnable on a real (PAL) C64.
 - Codeurs en Seine logo with a shine sweep, Rouen skyline (cathedral, Saint-Ouen, Flaubert bridge)
   over a shimmering Seine
 - Stable raster "copper" bars in the top border
-- Colour-cycled block logo
-- A "typer" that plays back a simulated opencode terminal session
 - 1x1 smooth scroller
 - Optional SID music
 

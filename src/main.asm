@@ -1,14 +1,11 @@
 ; =============================================================================
 ; opencode-c64 - main demo, made for Codeurs en Seine 2026 (Rouen, Kindarena, 19.11.2026)
 ;
-; Two parts, looping. Copper bars and scroller stay on screen the whole time.
+; One screen: Codeurs en Seine. Copper bars and scroller stay on screen.
 ;
 ;   D07 part "ces"     rows  1-11 : D03 Codeurs en Seine logo (custom charset A), shine sweep
 ;                      row  12    : "rouen * kindarena * 19.11.2026"
 ;                      rows 14-23 : D04 Rouen skyline (custom charset B), water shimmer
-;   D08 part "opencode" rows  1-5 : D05 big "opencode" block logo, rainbow sweep
-;                      row   7    : subtitle
-;                      rows  9-21 : D06 terminal "typer" simulating an opencode session
 ;   always             top border : D01 stable raster "copper" bars (irq_bars1/irq_bars2)
 ;                      row  24    : D02 1x1 smooth scroller (irq_split/irq_bottom)
 ; Effect references: docs/08-effects-library.md
@@ -19,7 +16,6 @@
 ; Build:  make          -> build/opencode.prg
 ;         make d64      -> build/opencode.d64 (for real hardware)
 ;         make run      -> launch in VICE (x64sc)
-;         make run-d07  -> launch in VICE and stay on D07
 ;         make gfx      -> regenerate src/gfx/*.asm from assets/
 ; Music:  src/music/music.sid at $1000 (Teh Disco by Jammer), on by default when the file exists.
 ;         make MUSIC=0 to build without it, make TIMING=1 to see its CPU cost (docs/05-music.md)
@@ -47,31 +43,18 @@ MEMPTR_B     = $1a              ; $d018: screen $0400, charset $2800
 ; ---- zero page ---------------------------------------------------------------
 ; $20-$2d: kept away from $f0-$ff, which most SID players use (Teh Disco: $fb/$fc)
 zp_scroll   = $20               ; 2 bytes: scroll text pointer
-zp_typer    = $22               ; 2 bytes: typer text pointer
-zp_cursor   = $24               ; 2 bytes: cursor screen address
-zp_color    = $26               ; 2 bytes: cursor colour RAM address
-zp_line     = $28               ; 2 bytes: start of current typer line
 zp_src      = $2a               ; 2 bytes: blit source
 zp_dst      = $2c               ; 2 bytes: blit destination
 
-; ---- layout: opencode part -----------------------------------------------------
-LOGO_ROW     = 1
-LOGO_COL     = 4
-SUB_ROW      = 7
-TYPER_ROW    = 9
-TYPER_ROWS   = 13
-TYPER_COL    = 1
-TYPER_START  = SCREEN + TYPER_ROW*40
+; ---- layout -------------------------------------------------------------------
 SCROLL_ROW   = 24
 SCROLL_ADDR  = SCREEN + SCROLL_ROW*40
 
-; ---- layout: Codeurs en Seine part ----------------------------------------------
 CES_ROW      = 1
 CES_COL      = (40 - ces_logo_W) / 2
 DATE_ROW     = 12
 ROUEN_ROW    = 14               ; skyline rows 14-22, water row 23
 WATER_ROW    = ROUEN_ROW + rouen_H - 1
-CES_FRAMES   = 450              ; 9 s at 50 Hz
 
 ; ---- raster lines --------------------------------------------------------------
 BAR_LINE     = $10              ; stable bars start at BAR_LINE+2, in the top border
@@ -79,15 +62,6 @@ BAR_COUNT    = 32
 MID_LINE     = $9d              ; inside row 13 (lines $9b-$a2): switch to charset B
 SPLIT_LINE   = $f0              ; just above scroller row (row 24 starts at $f3)
 BOTTOM_LINE  = $fc              ; below the last text row
-
-; ---- typer control codes (screen codes >= $80 are not used in the texts) -------
-T_COLOR      = $80              ; $80-$8f: set text colour (low nybble)
-T_PAUSE      = $fd
-T_NEWLINE    = $fe
-T_END        = $ff
-TYPE_SPEED   = 3                ; frames per character
-PAUSE_FRAMES = 60
-END_FRAMES   = 250
 
 ; copy a .w x .h map to screen position (.col, .row)
 !macro blit .map, .col, .row, .w, .h {
@@ -148,28 +122,16 @@ main_loop:
 
         jsr rotate_bars
         jsr scroller_update     ; must run between $fc and $f0 (it does)
-        lda part
-        bne .opencode
         jsr ces_update
-        jmp main_loop
-.opencode:
-        jsr logo_colors
-        jsr typer_update
         jmp main_loop
 
 nmi:    rti
 
 ; =============================================================================
-; Parts
+; Codeurs en Seine screen
 ; =============================================================================
 
 part_ces:                       ; D07
-        lda #0
-        sta part
-        lda #<CES_FRAMES
-        sta part_timer
-        lda #>CES_FRAMES
-        sta part_timer+1
         lda #BLACK
         jsr clear_top
         +blit ces_logo_map, CES_COL, CES_ROW, ces_logo_W, ces_logo_H
@@ -191,30 +153,9 @@ part_ces:                       ; D07
         bpl -
         rts
 
-part_opencode:                  ; D08
-        lda #1
-        sta part
-        lda #GREY
-        jsr clear_top
-        jsr draw_logo
-        jsr draw_subtitle
-        jmp typer_reset
-
 ces_update:
         jsr ces_shine
-        jsr water_colors
-!if DEMO_D07_ONLY = 0 {
-        lda part_timer          ; 16-bit countdown
-        bne +
-        dec part_timer+1
-+       dec part_timer
-        lda part_timer
-        ora part_timer+1
-        bne +
-        jmp part_opencode
-+
-}
-        rts
+        jmp water_colors
 
 ; =============================================================================
 ; IRQ handlers
@@ -441,54 +382,6 @@ water_colors:
         bpl -
         rts
 
-; ---- D05 opencode logo: '#' -> reverse space, anything else -> space -----------
-draw_logo:
-        !for r, 0, 4 {
-        ldx #30
--       lda logo_text+r*31,x
-        ldy #$20
-        cmp #'#'
-        bne +
-        ldy #$a0
-+       tya
-        sta SCREEN+(LOGO_ROW+r)*40+LOGO_COL,x
-        dex
-        bpl -
-        }
-        rts
-
-; diagonal rainbow sweeping through the logo
-logo_colors:
-        inc logo_phase
-        ldx #39
--       txa
-        clc
-        adc logo_phase
-        sta tmp
-        !for r, 0, 4 {
-        lda tmp
-        clc
-        adc #r*2
-        and #31
-        tay
-        lda logo_gradient,y
-        sta COLOR_RAM+(LOGO_ROW+r)*40,x
-        }
-        dex
-        bpl -
-        rts
-
-draw_subtitle:
-        ldx #0
--       lda subtitle,x
-        beq +
-        sta SCREEN+SUB_ROW*40+(40-SUBTITLE_LEN)/2,x
-        lda #LIGHT_GREY
-        sta COLOR_RAM+SUB_ROW*40+(40-SUBTITLE_LEN)/2,x
-        inx
-        bne -
-+       rts
-
 ; ---- D02 smooth scroller --------------------------------------------------------
 scroller_init:
         lda #<scroll_text
@@ -529,107 +422,6 @@ scroller_update:
         inc zp_scroll+1
 .sdone: rts
 
-; ---- D06 typer: simulated opencode terminal session ------------------------------
-typer_reset:
-        lda #$20                ; clear typer area (13 rows = 520 bytes)
-        ldx #0
--       sta TYPER_START,x
-        sta TYPER_START+$100,x
-        sta TYPER_START+TYPER_ROWS*40-$100,x
-        inx
-        bne -
-        lda #<typer_text
-        sta zp_typer
-        lda #>typer_text
-        sta zp_typer+1
-        lda #<(TYPER_START+TYPER_COL)
-        sta zp_line
-        sta zp_cursor
-        lda #>(TYPER_START+TYPER_COL)
-        sta zp_line+1
-        sta zp_cursor+1
-        lda #WHITE
-        sta typer_color
-        lda #TYPE_SPEED
-        sta typer_delay
-        lda #0
-        sta typer_ended
-        rts
-
-typer_update:
-        dec typer_delay
-        bne .cursor
-        lda #TYPE_SPEED
-        sta typer_delay
-.next:  ldy #0
-        lda (zp_typer),y
-        cmp #T_END
-        bne +
-        lda typer_ended         ; first time: wait, then switch part
-        bne .restart
-        inc typer_ended
-        lda #END_FRAMES
-        sta typer_delay
-        bne .cursor
-.restart:
-        jmp part_ces
-+       jsr .advance
-        cmp #T_NEWLINE
-        bne +
-        lda #$20                ; erase cursor
-        sta (zp_cursor),y
-        lda zp_line
-        clc
-        adc #40
-        sta zp_line
-        sta zp_cursor
-        lda zp_line+1
-        adc #0
-        sta zp_line+1
-        sta zp_cursor+1
-        jmp .cursor
-+       cmp #T_PAUSE
-        bne +
-        lda #PAUSE_FRAMES
-        sta typer_delay
-        bne .cursor
-+       cmp #T_COLOR+16         ; $80-$8f: colour change, then next byte immediately
-        bcs +
-        cmp #T_COLOR
-        bcc +
-        and #$0f
-        sta typer_color
-        jmp .next
-+       sta (zp_cursor),y       ; printable character
-        jsr .set_color
-        inc zp_cursor
-        bne .cursor
-        inc zp_cursor+1
-.cursor:                        ; blinking block cursor
-        ldy #0
-        lda frame
-        and #$10
-        beq +
-        lda #$a0
-        !byte $2c               ; BIT abs: skip next 2-byte instruction
-+       lda #$20
-        sta (zp_cursor),y
-.set_color:
-        lda zp_cursor
-        sta zp_color
-        lda zp_cursor+1
-        clc
-        adc #>(COLOR_RAM-SCREEN)
-        sta zp_color+1
-        lda typer_color
-        sta (zp_color),y
-        rts
-.advance:                       ; A preserved
-        inc zp_typer
-        bne +
-        inc zp_typer+1
-+       rts
-
 !if * > CODE_END { !error "code reaches $1000 (music area): move data after DATA_START" }
 
 ; =============================================================================
@@ -660,21 +452,11 @@ bars:   ; 32 lines, rotated every frame. DATA_START is page aligned: lda bars,x 
 frame:        !byte 0
 frame_flag:   !byte 0
 tmp:          !byte 0
-part:         !byte 0
-part_timer:   !word 0
 blit_w:       !byte 0
 blit_h:       !byte 0
-logo_phase:   !byte 0
 shine_phase:  !byte 0
 water_phase:  !byte 0
 scroll_x:     !byte 7
-typer_delay:  !byte 1
-typer_color:  !byte WHITE
-typer_ended:  !byte 0
-
-logo_gradient: ; 32 entries
-        !byte $06,$06,$04,$04,$0e,$0e,$03,$03,$0d,$0d,$01,$01,$0d,$0d,$03,$03
-        !byte $0e,$0e,$04,$04,$06,$06,$0b,$0b,$0c,$0c,$0f,$0f,$0c,$0c,$0b,$0b
 
 shine_gradient: ; 64 entries: light blue logo with a white glint passing through
         !fill 40, LIGHT_BLUE
@@ -693,18 +475,6 @@ rouen_colors: ; one colour per column for the skyline rows
         !fill 5, LIGHT_GREY     ; abbatiale Saint-Ouen
         !fill 7, LIGHT_BLUE     ; houses
 
-logo_text: ; 5 rows x 31 columns, '#' = filled block
-        !text "### ### ### ##  ### ### ##  ###"
-        !text "# # # # #   # # #   # # # # #  "
-        !text "# # ### ##  # # #   # # # # ## "
-        !text "# # #   #   # # #   # # # # #  "
-        !text "### #   ### # # ### ### ##  ###"
-
-subtitle:
-        !scr "the open source AI coding agent"
-SUBTITLE_LEN = * - subtitle
-        !byte 0
-
 date_text:
         !scr "rouen * kindarena * 19.11.2026"
 DATE_LEN = * - date_text
@@ -714,29 +484,6 @@ DATE_LEN = * - date_text
 !source "src/gfx/rouen.map.asm"
 
 ; Texts: avoid '@' (screen code 0 = terminator) and "{|}~" (codes $5b-$5e)
-typer_text:
-        !byte T_COLOR+LIGHT_GREEN
-        !scr "$ "
-        !byte T_COLOR+WHITE
-        !scr "opencode", T_PAUSE, T_NEWLINE
-        !byte T_NEWLINE
-        !byte T_COLOR+LIGHT_BLUE
-        !scr "> what are you?", T_PAUSE, T_NEWLINE
-        !byte T_COLOR+GREY
-        !scr "  an open source AI coding agent,", T_NEWLINE
-        !scr "  built for the terminal.", T_PAUSE, T_NEWLINE
-        !byte T_NEWLINE
-        !byte T_COLOR+LIGHT_BLUE
-        !scr "> what can you do?", T_PAUSE, T_NEWLINE
-        !byte T_COLOR+GREY
-        !scr "  - read, write & refactor code", T_NEWLINE
-        !scr "  - run shell commands & tests", T_NEWLINE
-        !scr "  - any LLM provider, LSP, MCP", T_NEWLINE
-        !scr "  - even 6502 assembly for a C64!", T_PAUSE, T_NEWLINE
-        !byte T_NEWLINE
-        !byte T_COLOR+YELLOW
-        !scr "  hello codeurs en seine!", T_END
-
 scroll_text:
         !scr "      *** opencode on the commodore 64 ***    "
         !scr "live at codeurs en seine 2026, kindarena, rouen ...    "

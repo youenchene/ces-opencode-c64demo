@@ -39,7 +39,7 @@ footer{padding:16px 24px;background:#000;font-size:12px}
 <body>
 <header>
   <h1>**** OPENCODE C64 — DEMO EFFECTS ****</h1>
-  <p>72 demo references, examples, and recipes for Codeurs en Seine 2026.
+  <p>69 demo references, examples, and recipes for Codeurs en Seine 2026.
   Green cards show what runs in the demo today.</p>
 </header>
 <nav>
@@ -47,7 +47,7 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <input id="q" placeholder="search (D01, plasma, sprite...)">
 </nav>
 <main>
-<section id="done"><h2>In the demo (8)</h2><p class="lead">Use these reference IDs in prompts and issue reports. Captures show the real program running in PAL VICE.</p><div class="grid"><article id="D01" class="card done" data-text="d01 stable raster copper bars colour gradients roll through the top border, one colour per raster line.">
+<section id="done"><h2>In the demo (5)</h2><p class="lead">Use these reference IDs in prompts and issue reports. Captures show the real program running in PAL VICE.</p><div class="grid"><article id="D01" class="card done" data-text="d01 stable raster copper bars colour gradients roll through the top border, one colour per raster line.">
   <div class="pic"><img src="img/effects/copper-bars.gif" alt="Stable raster copper bars" loading="lazy"></div>
   <h3><a class="id" href="#D01">D01</a> Stable raster copper bars <span class="tag ok">in the demo</span></h3>
   <p>Colour gradients roll through the top border, one colour per raster line.</p>
@@ -71,29 +71,11 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <p>A second charset shows the Rouen skyline while blue tones cycle across the Seine.</p>
   <p class="meta">Code: <code>src/main.asm</code>: <code>irq_mid</code>, <code>water_colors</code> · capture: real VICE (PAL)</p>
 </article>
-<article id="D05" class="card done" data-text="d05 colour-cycled block logo a diagonal rainbow sweeps across the opencode logo.">
-  <div class="pic"><img src="img/effects/logo-rainbow.gif" alt="Colour-cycled block logo" loading="lazy"></div>
-  <h3><a class="id" href="#D05">D05</a> Colour-cycled block logo <span class="tag ok">in the demo</span></h3>
-  <p>A diagonal rainbow sweeps across the opencode logo.</p>
-  <p class="meta">Code: <code>src/main.asm</code>: <code>draw_logo</code>, <code>logo_colors</code> · capture: real VICE (PAL)</p>
-</article>
-<article id="D06" class="card done" data-text="d06 terminal typer a simulated terminal session prints character by character with a blinking cursor.">
-  <div class="pic"><img src="img/effects/typer.gif" alt="Terminal typer" loading="lazy"></div>
-  <h3><a class="id" href="#D06">D06</a> Terminal typer <span class="tag ok">in the demo</span></h3>
-  <p>A simulated terminal session prints character by character with a blinking cursor.</p>
-  <p class="meta">Code: <code>src/main.asm</code>: <code>typer_update</code> · capture: real VICE (PAL)</p>
-</article>
 <article id="D07" class="card done" data-text="d07 part &quot;ces&quot; (full screen) codeurs en seine logo and date above the rouen skyline, with copper bars and scroller.">
   <div class="pic"><img src="img/effects/demo-ces.gif" alt="Part &quot;ces&quot; (full screen)" loading="lazy"></div>
   <h3><a class="id" href="#D07">D07</a> Part &quot;ces&quot; (full screen) <span class="tag ok">in the demo</span></h3>
   <p>Codeurs en Seine logo and date above the Rouen skyline, with copper bars and scroller.</p>
   <p class="meta">Code: <code>src/main.asm</code>: <code>part_ces</code>, <code>ces_update</code> · capture: real VICE (PAL)</p>
-</article>
-<article id="D08" class="card done" data-text="d08 part &quot;opencode&quot; (full screen) block logo, subtitle and simulated terminal session, with copper bars and scroller.">
-  <div class="pic"><img src="img/effects/demo-opencode.gif" alt="Part &quot;opencode&quot; (full screen)" loading="lazy"></div>
-  <h3><a class="id" href="#D08">D08</a> Part &quot;opencode&quot; (full screen) <span class="tag ok">in the demo</span></h3>
-  <p>Block logo, subtitle and simulated terminal session, with copper bars and scroller.</p>
-  <p class="meta">Code: <code>src/main.asm</code>: <code>part_opencode</code> · capture: real VICE (PAL)</p>
 </article></div></section>
 <section id="examples"><h2>Standalone examples (5)</h2><div class="grid"><article id="example-00" class="card" data-text="00 minimal executable basic upstart, machine takeover, frame sync by polling $d012, border colour cycle.">
   <div class="pic"><img src="img/effects/ex-hello.gif" alt="Minimal executable" loading="lazy"></div>
@@ -199,8 +181,8 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <div class="pic"><canvas data-fx="A11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A11</span> Typewriter tweaks</h3>
   <p>Different speed, colours, extra lines</p>
-  <details><summary>How</summary><p><code>TYPE_SPEED</code>, <code>typer_text</code> control bytes</p></details>
-  <p class="meta">CPU: 0 · <code>typer_text</code> · example: <a href="examples/A11_typewriter.asm"><code>A11_typewriter.asm</code></a></p>
+  <details><summary>How</summary><p>Adjust the print delay and text stream</p></details>
+  <p class="meta">CPU: 0 · standalone example · example: <a href="examples/A11_typewriter.asm"><code>A11_typewriter.asm</code></a></p>
 </article>
 <article id="A12" class="card" data-tier="A" data-text="a12 char animation waves, blinking windows, a waving flag">
   <div class="pic"><canvas data-fx="A12"></canvas><span class="sim">simulation</span></div>
@@ -230,11 +212,11 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <details><summary>How</summary><p>Change <code>$d011</code> YSCROLL bits (keep bit 4 and bit 3) for a few frames; clamp to 0-7</p></details>
   <p class="meta">CPU: 0 · <code>irq_bottom</code> · example: <a href="examples/A15_screen_shake.asm"><code>A15_screen_shake.asm</code></a></p>
 </article>
-<article id="A16" class="card" data-tier="A" data-text="a16 logo colour themes opencode logo in brand colours">
+<article id="A16" class="card" data-tier="A" data-text="a16 logo colour themes a logo in brand colours">
   <div class="pic"><canvas data-fx="A16"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A16</span> Logo colour themes</h3>
-  <p>Opencode logo in brand colours</p>
-  <details><summary>How</summary><p>Edit <code>logo_gradient</code> / <code>shine_gradient</code></p></details>
+  <p>A logo in brand colours</p>
+  <details><summary>How</summary><p>Edit the palette or the demo&#x27;s <code>shine_gradient</code></p></details>
   <p class="meta">CPU: 0 · data · example: <a href="examples/A16_logo_themes.asm"><code>A16_logo_themes.asm</code></a></p>
 </article>
 <article id="A17" class="card" data-tier="A" data-text="a17 greetings list rotating group/sponsor names">

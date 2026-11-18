@@ -2,16 +2,10 @@
 
 Made for **Codeurs en Seine 2026**: Rouen, Kindarena, 19 November 2026 (https://www.codeursenseine.com/2026).
 
-## Parts (looping)
+## Screen
 
-| # | Part | Duration | Init / per-frame routines |
-|---|---|---|---|
-| 0 | **ces**: Codeurs en Seine logo + Rouen skyline | `CES_FRAMES` = 450 (9 s) | `part_ces` / `ces_update` |
-| 1 | **opencode**: block logo + terminal typer | until the typer ends + `END_FRAMES` (5 s) | `part_opencode` / `logo_colors`, `typer_update` |
-
-The copper bars and the scroller run in both parts. Switching parts clears rows 0-23 and redraws in one go
-(about one frame of tearing).
-`make run-d07` builds and launches a preview that stays on the `ces` part instead of switching.
+`make run` shows the `ces` screen indefinitely. `part_ces` draws it at startup, and `ces_update`
+animates the logo and water each frame alongside the copper bars and scroller.
 
 The `D` references below match the [effect library](08-effects-library.md#in-the-demo--stable-references).
 
@@ -28,15 +22,6 @@ row  23         D04 the Seine: quay + waves, colour-cycled (water_colors)
 row  24         D02 smooth scroller
 ```
 
-### Part "opencode" (D08)
-
-```
-rows  1-5       D05 "OPENCODE" block logo, rainbow sweep
-row   7         the open source AI coding agent
-rows  9-21      D06 typer: simulated terminal session ($ opencode / > what are you? ...)
-row  24         D02 smooth scroller
-```
-
 ## IRQ chain (one frame)
 
 | Line | Handler | Work |
@@ -46,13 +31,13 @@ row  24         D02 smooth scroller
 | `$f0` | `irq_split` | `$d016` = scroll_x, 38 columns |
 | `$fc` | `irq_bottom` | `$d016` = `$c8`, `$d018` = `$18` (charset A), music play, `frame_flag++` |
 
-Main loop (after `irq_bottom`): `rotate_bars`, `scroller_update`, then the current part's routines.
+Main loop (after `irq_bottom`): `rotate_bars`, `scroller_update`, then `ces_update`.
 
 ## Memory map
 
 | Range | Content |
 |---|---|
-| `$00f0-$00fd` | zero-page pointers (scroll, typer, cursor, colour, line, blit src/dst) |
+| `$0020-$0021`, `$002a-$002d` | zero-page pointers (scroll, blit src/dst) |
 | `$0400-$07e7` | screen (VIC bank 0) |
 | `$0801-$0fff` | BASIC upstart, code, IRQs (`irq_bars*` page-aligned). `!error` if code reaches `$1000` |
 | `$1000-$1fff` | SID music (`MUSIC=1`), zero-filled otherwise |
@@ -79,7 +64,7 @@ Edit `assets/rouen.txt` in any text editor: keep it 320 columns × 80 lines.
 ## Ideas for next steps (ordered by impact for the presentation)
 
 1. Music (`MUSIC=1`) with a tune cleared for use.
-2. Fade or wipe transition between the parts, using fade tables (see 04).
+2. Fade or wipe into the screen, using fade tables (see 04).
 3. Sine-moving bars instead of plain rotation.
 4. Sprite ">_" prompt bouncing (from `examples/04`), or sprite clouds/boats moving over the Seine.
 5. Lit windows twinkling in the skyline (colour RAM changes only, no new tiles).

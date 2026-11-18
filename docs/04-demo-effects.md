@@ -55,9 +55,8 @@ charset); colour-cycled scroller (rotate `$d800` colours).
 
 ## Text typer ✅
 
-`src/main.asm` (`typer_update`). Prints one char every N frames from a byte stream with control codes
-(colour, pause, newline, end). A blinking reverse-space cursor makes it look like a terminal. This is
-the main part of the opencode presentation.
+Standalone recipe [A11](examples/A11_typewriter.asm). Prints one char every N frames
+from a byte stream. A blinking reverse-space cursor makes it look like a terminal.
 
 ## Shine sweep and water shimmer ✅
 
@@ -67,9 +66,8 @@ makes a glint crossing the logo now and then. A 16-entry blue table cycling alon
 
 ## Colour-cycled logo ✅
 
-`src/main.asm` (`draw_logo`, `logo_colors`). The logo is drawn with reverse spaces (`$a0`). Only colour RAM
-changes each frame: a diagonal gradient index `(x + row*2 + phase) & 31`. It's cheap (about 2.5k cycles)
-and very readable on a CRT.
+Standalone recipe [A16](examples/A16_logo_themes.asm). Draw a logo with reverse spaces (`$a0`)
+and animate it by changing only colour RAM, using the same principle as the demo's shine sweep.
 
 ## Sprites and sine tables ✅ {#sprites}
 
@@ -113,7 +111,7 @@ the switch inside a text-only row hides the IRQ jitter completely: no stable ras
 
 ## Character-set effects 📝
 
-- Custom font for texts (replace codes `$00-$5f` after the ROM copy), or the opencode "block" glyphs.
+- Custom font for texts (replace codes `$00-$5f` after the ROM copy).
 - **Plasma**: per-char colour (`$d800`) = `sin1[x+a] + sin2[y+b] + sin3[x+y+c]`, or a plasma that rewrites
   the charset. 40×25 = 1000 colour writes per frame is too much for one frame, so update half per
   frame or use a smaller area.
@@ -144,8 +142,6 @@ double buffering. Expensive: aim for 25 fps.
 
 ## Parts and transitions (demo structure)
 
-`src/main.asm` uses the simplest form: a `part` variable, one init routine per part (`part_ces`,
-`part_opencode`), and the main loop calls the current part's per-frame routines. A part ends either on a
-16-bit countdown (`part_timer`) or on an event (typer finished). With more parts, use a table of
-`(frames, init_routine, frame_routine)`. Keep the IRQ chain identical across parts if
-you can, so that switching never glitches the display.
+The demo shows one screen. If you add several parts, see [B28](examples/B28_part_sequencer.asm)
+for a table of `(frames, init_routine, frame_routine)`. Keep the IRQ chain identical across parts
+when possible so switching doesn't glitch the display.
