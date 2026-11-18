@@ -8,7 +8,7 @@ by having it edit this C64 demo live, with a fast model, while the audience watc
 | [scenario.md](scenario.md) | The stage script, one act per opencode feature (dashboard, models, subagents, fork, MCP, compaction) |
 | [setup.md](setup.md) | Before the talk: model, opencode config, key cheat sheet, screen layout, git safety net, real C64 |
 | [rehearsal.md](rehearsal.md) | Timing sheet to fill in during rehearsals (one line per prompt per run) |
-| [features-to-try.md](features-to-try.md) | opencode features not used yet that would help this talk (undo, warming, commands, images, agents, stats…) |
+| [features-to-try.md](features-to-try.md) | Stage-ready `/check` and `@c64-effects` examples, plus ideas to try (undo, warming, images, agents, stats…) |
 
 ## Principles
 
