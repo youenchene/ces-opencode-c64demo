@@ -8,10 +8,31 @@ Sources: the Codebase64 wiki (the community's demo-coding wiki, `https://codebas
 (see the end of this file). Codebase64 content is **CC BY-NC-SA 4.0**: read it, rewrite the routine in our
 ACME style, and credit the article in the code comment. Don't paste listings verbatim.
 
-**Every effect has a runnable example**: `docs/examples/<ID>_*.asm` (IDs zero-padded: A8 → `A08_beat_flash.asm`).
+**Every A/B/C recipe has a runnable example**: `docs/examples/<ID>_*.asm` (IDs zero-padded: A8 → `A08_beat_flash.asm`).
 Read it before integrating an effect into `src/main.asm`; check its `Limitations:` header.
 
 Link format: `cb:base:fld` means `https://codebase64.net/doku.php?id=base:fld`.
+
+## In the demo — stable references
+
+Use the `D` IDs in issue reports and live prompts for effects and full-screen parts that already run
+in `src/main.asm`. Use the A/B/C IDs below for recipes and variants. To add a demo effect, give it the
+next unused `D` ID here and in its source comment, add a `make gifs` capture, then run `make effects-page`.
+Don't renumber or reuse IDs.
+
+To preview just **D07**, run `make run-d07`. It starts on D07 and stays there, with the copper bars
+and scroller still running. `make run` starts on D07 too, but switches to D08 after nine seconds.
+
+| ID (preview) | Effect or part | What you see | Code in `src/main.asm` | Capture |
+|---|---|---|---|---|
+| [D01](effects.html#D01) | Stable raster copper bars | Colour gradients roll through the top border, one colour per raster line. | `irq_bars1`, `irq_bars2`, `rotate_bars` | `copper-bars.gif` |
+| [D02](effects.html#D02) | 1x1 smooth scroller | The bottom text row scrolls left while the rest of the screen stays still. | `irq_split`, `scroller_update` | `scroller.gif` |
+| [D03](effects.html#D03) | Charset logo + shine sweep | A white glint crosses the Codeurs en Seine logo. | `part_ces`, `ces_shine` | `ces-shine.gif` |
+| [D04](effects.html#D04) | Charset split + water shimmer | A second charset shows the Rouen skyline while blue tones cycle across the Seine. | `irq_mid`, `water_colors` | `rouen-seine.gif` |
+| [D05](effects.html#D05) | Colour-cycled block logo | A diagonal rainbow sweeps across the opencode logo. | `draw_logo`, `logo_colors` | `logo-rainbow.gif` |
+| [D06](effects.html#D06) | Terminal typer | A simulated terminal session prints character by character with a blinking cursor. | `typer_update` | `typer.gif` |
+| [D07](effects.html#D07) | Part "ces" (full screen) | Codeurs en Seine logo and date above the Rouen skyline, with copper bars and scroller. | `part_ces`, `ces_update` | `demo-ces.gif` |
+| [D08](effects.html#D08) | Part "opencode" (full screen) | Block logo, subtitle and simulated terminal session, with copper bars and scroller. | `part_opencode` | `demo-opencode.gif` |
 
 ## How to read the tiers
 

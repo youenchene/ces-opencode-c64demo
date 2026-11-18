@@ -3,7 +3,8 @@
 
 Usage: python3 tools/effects_page.py        (or: make effects-page)
 
-- "In the demo" cards use real VICE captures from docs/img/effects/*.gif (make gifs).
+- "In the demo" cards are parsed from the D-ID table in docs/08-effects-library.md
+   and use real VICE captures from docs/img/effects/*.gif (make gifs).
 - Library cards (tiers A/B/C) are parsed from docs/08-effects-library.md, so the page stays in sync
    with the doc. Previews use VICE captures where available and browser simulations otherwise.
 The page is a single self-contained file apart from the GIFs (relative paths).
@@ -18,36 +19,18 @@ DOC = os.path.join(ROOT, "docs", "08-effects-library.md")
 JS = os.path.join(ROOT, "tools", "effects_page.js")
 OUT = os.path.join(ROOT, "docs", "effects.html")
 
-# (gif, name, description, where in the code)
-IMPLEMENTED = [
-    ("demo-ces.gif", "Part \"ces\" (full screen)",
-     "Codeurs en Seine logo, date line, Rouen skyline over the Seine, copper bars and scroller.", "src/main.asm part_ces"),
-    ("demo-opencode.gif", "Part \"opencode\" (full screen)",
-     "Block logo with rainbow, subtitle and the simulated terminal session.", "src/main.asm part_opencode"),
-    ("copper-bars.gif", "Stable raster copper bars",
-     "Double-IRQ stable raster, one colour per raster line in the top border, rotated every frame.", "irq_bars1/2, rotate_bars"),
-    ("scroller.gif", "1x1 smooth scroller",
-     "$d016 fine scroll + char shift, raster split so only row 24 moves, 38-column mode hides the edges.", "irq_split, scroller_update"),
-    ("ces-shine.gif", "Charset logo + shine sweep",
-     "Official logo converted to 106 custom chars; a white glint crosses it through colour RAM only.", "ces_shine, tools/img2chars.py"),
-    ("rouen-seine.gif", "Charset split + water shimmer",
-     "Second charset below row 13 (raster IRQ on $d018) for the skyline; the Seine cycles blue tones.", "irq_mid, water_colors"),
-    ("logo-rainbow.gif", "Colour-cycled block logo",
-     "Logo built from reverse spaces; a diagonal rainbow runs through colour RAM.", "draw_logo, logo_colors"),
-    ("typer.gif", "Terminal typer",
-     "Byte stream with colour/pause/newline codes, printed char by char with a blinking cursor.", "typer_update"),
-    ("ex-hello.gif", "Example 00: minimal executable",
-     "BASIC upstart, machine takeover, frame sync by polling $d012, border colour cycle.", "docs/examples/00_hello.asm"),
-    ("ex-raster-irq.gif", "Example 01: raster IRQ split",
-     "Two chained raster interrupts split the screen into colour zones.", "docs/examples/01_raster_irq.asm"),
-    ("ex-stable-bars.gif", "Example 02: stable raster bars",
-     "Full-height cycle-exact bars with the screen blanked (no badlines).", "docs/examples/02_stable_raster_bars.asm"),
-    ("ex-scroller.gif", "Example 03: smooth scroller",
-     "The scroller technique on its own.", "docs/examples/03_smooth_scroller.asm"),
-    ("ex-sprites-sine.gif", "Example 04: sprites on sine tables",
-     "8 hardware sprites following sine tables generated at assemble time, X MSB handling.", "docs/examples/04_sprites_sine.asm"),
-    ("ex-heads.gif", "Example B30: bouncing portrait sprites",
-     "Two portrait cutouts spin like wheels and bounce off the screen edges. Standalone example.", "docs/examples/B30_rotating_heads.asm"),
+# (example ID, name, description, code, GIF)
+EXAMPLE_CAPTURES = [
+    ("00", "Minimal executable",
+     "BASIC upstart, machine takeover, frame sync by polling $d012, border colour cycle.", "`docs/examples/00_hello.asm`", "ex-hello.gif"),
+    ("01", "Raster IRQ split",
+     "Two chained raster interrupts split the screen into colour zones.", "`docs/examples/01_raster_irq.asm`", "ex-raster-irq.gif"),
+    ("02", "Stable raster bars",
+     "Full-height cycle-exact bars with the screen blanked (no badlines).", "`docs/examples/02_stable_raster_bars.asm`", "ex-stable-bars.gif"),
+    ("03", "Smooth scroller",
+     "The scroller technique on its own.", "`docs/examples/03_smooth_scroller.asm`", "ex-scroller.gif"),
+    ("04", "Sprites on sine tables",
+     "8 hardware sprites following sine tables generated at assemble time, X MSB handling.", "`docs/examples/04_sprites_sine.asm`", "ex-sprites-sine.gif"),
 ]
 
 LIBRARY_CAPTURES = {"B30": "ex-heads.gif"}
@@ -72,6 +55,30 @@ def link_sources(s):
                   lambda m: f'<a href="https://codebase64.net/doku.php?id={m.group(1)}">{m.group(1)}</a>', s)
 
 
+def parse_demo():
+    rows = []
+    seen = set()
+    with open(DOC, encoding="utf-8") as doc:
+        for line in doc:
+            if not line.startswith("| [D"):
+                continue
+            m = re.fullmatch(r"\| \[(D\d{2,})\]\(effects\.html#\1\) \|(.+)\|\s*", line)
+            if not m:
+                raise ValueError(f"Invalid demo reference: {line.strip()}")
+            fx_id = m.group(1)
+            if fx_id in seen:
+                raise ValueError(f"Duplicate demo reference: {fx_id}")
+            name, desc, code, gif = (cell.strip() for cell in m.group(2).split("|"))
+            gif = gif.strip("`")
+            if not os.path.isfile(os.path.join(ROOT, "docs", "img", "effects", gif)):
+                raise ValueError(f"{fx_id}: missing capture {gif} (run make gifs)")
+            seen.add(fx_id)
+            rows.append((fx_id, name, desc, f"`src/main.asm`: {code}", gif))
+    if not rows:
+        raise ValueError("No demo references found in the effects library")
+    return rows
+
+
 def parse_library():
     rows = []
     for line in open(DOC, encoding="utf-8"):
@@ -89,13 +96,15 @@ def parse_library():
     return rows
 
 
-def card_impl(gif, name, desc, where):
-    tag = "standalone example" if gif == "ex-heads.gif" else "in the demo"
-    return f"""<article class="card done">
+def card_capture(fx_id, name, desc, where, gif, *, demo=False):
+    anchor = fx_id if demo else f"example-{fx_id}"
+    tag = "in the demo" if demo else "standalone example"
+    card_class = "card done" if demo else "card"
+    return f"""<article id="{anchor}" class="{card_class}" data-text="{html.escape(f'{fx_id} {name} {desc}'.lower())}">
   <div class="pic"><img src="img/effects/{gif}" alt="{html.escape(name)}" loading="lazy"></div>
-  <h3>{html.escape(name)} <span class="tag ok">{tag}</span></h3>
+  <h3><a class="id" href="#{anchor}">{fx_id}</a> {html.escape(name)} <span class="tag ok">{tag}</span></h3>
   <p>{md_inline(desc)}</p>
-  <p class="meta">Code: {md_inline('`' + where + '`')} · capture: real VICE (PAL)</p>
+  <p class="meta">Code: {md_inline(where)} · capture: real VICE (PAL)</p>
 </article>"""
 
 
@@ -114,7 +123,7 @@ def card_lib(r):
                    '<span class="sim">PAL VICE capture</span>')
     else:
         preview = f'<canvas data-fx="{r["id"]}"></canvas><span class="sim">simulation</span>'
-    return f"""<article id="{r['id']}" class="card" data-tier="{r['tier']}" data-text="{html.escape((r['name'] + ' ' + r['see']).lower())}">
+    return f"""<article id="{r['id']}" class="card" data-tier="{r['tier']}" data-text="{html.escape((r['id'] + ' ' + r['name'] + ' ' + r['see']).lower())}">
   <div class="pic">{preview}</div>
   <h3><span class="id">{r['id']}</span> {md_inline(r['name'])}</h3>
   <p>{md_inline(r['see'])}</p>
@@ -124,19 +133,23 @@ def card_lib(r):
 
 
 def main():
+    demo = parse_demo()
     lib = parse_library()
-    parts = [f'<section id="done"><h2>Demo and example captures ({len(IMPLEMENTED)})</h2>'
-             '<p class="lead">Animated captures of the real program running in VICE (<code>make gifs</code>).</p>'
-             '<div class="grid">' + "\n".join(card_impl(*e) for e in IMPLEMENTED) + "</div></section>"]
+    parts = [f'<section id="done"><h2>In the demo ({len(demo)})</h2>'
+             '<p class="lead">Use these reference IDs in prompts and issue reports. '
+             'Captures show the real program running in PAL VICE.</p>'
+             '<div class="grid">' + "\n".join(card_capture(*e, demo=True) for e in demo) + "</div></section>",
+             f'<section id="examples"><h2>Standalone examples ({len(EXAMPLE_CAPTURES)})</h2>'
+             '<div class="grid">' + "\n".join(card_capture(*e) for e in EXAMPLE_CAPTURES) + "</div></section>"]
     for t, (title, lead) in TIERS.items():
         cards = [card_lib(r) for r in lib if r["tier"] == t]
         parts.append(f'<section id="tier{t}" class="tier"><h2>{title} ({len(cards)})</h2><p class="lead">{lead} '
                      'Each preview is labelled as a PAL VICE capture or a browser simulation.</p>'
                      '<div class="grid">' + "\n".join(cards) + "</div></section>")
     page = TEMPLATE.replace("%BODY%", "\n".join(parts)).replace("%JS%", open(JS, encoding="utf-8").read()) \
-        .replace("%COUNT%", str(len(IMPLEMENTED) + len(lib)))
+        .replace("%COUNT%", str(len(demo) + len(EXAMPLE_CAPTURES) + len(lib)))
     open(OUT, "w", encoding="utf-8").write(page)
-    print(f"{os.path.relpath(OUT, ROOT)}: {len(IMPLEMENTED)} implemented + {len(lib)} library effects")
+    print(f"{os.path.relpath(OUT, ROOT)}: {len(demo)} demo references + {len(EXAMPLE_CAPTURES)} examples + {len(lib)} library recipes")
 
 
 TEMPLATE = """<!DOCTYPE html>
@@ -159,7 +172,7 @@ main{padding:0 24px 40px}
 h2{color:var(--hi);margin:28px 0 4px}
 .lead{margin:0 0 14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.card{background:var(--panel);padding:12px;border:2px solid #000;display:flex;flex-direction:column}
+.card{background:var(--panel);padding:12px;border:2px solid #000;display:flex;flex-direction:column;scroll-margin-top:70px}
 .card.done{border-color:var(--ok)}
 .pic{position:relative;background:#000;display:flex;align-items:center;justify-content:center;min-height:120px;margin-bottom:8px}
 .pic img,.pic canvas{width:100%;image-rendering:pixelated;display:block}
@@ -180,12 +193,12 @@ footer{padding:16px 24px;background:#000;font-size:12px}
 <body>
 <header>
   <h1>**** OPENCODE C64 — DEMO EFFECTS ****</h1>
-  <p>%COUNT% effects for the Codeurs en Seine 2026 demo. Green cards run in the demo today (real captures);
-  the rest is the library from <code>docs/08-effects-library.md</code>, previewed as browser simulations.</p>
+  <p>%COUNT% demo references, examples, and recipes for Codeurs en Seine 2026.
+  Green cards show what runs in the demo today.</p>
 </header>
 <nav>
-  <a href="#done">In the demo</a><a href="#tierA">Tier A</a><a href="#tierB">Tier B</a><a href="#tierC">Tier C</a>
-  <input id="q" placeholder="search (plasma, sprite, border...)">
+  <a href="#done">In the demo</a><a href="#examples">Examples</a><a href="#tierA">Tier A</a><a href="#tierB">Tier B</a><a href="#tierC">Tier C</a>
+  <input id="q" placeholder="search (D01, plasma, sprite...)">
 </nav>
 <main>
 %BODY%

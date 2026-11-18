@@ -2,6 +2,7 @@
 
 Each entry covers what it is, how it works, what it costs, and where it is implemented in this repo.
 Status: ✅ = example and/or used in `src/main.asm`, 📝 = described only (a good candidate for a live edit).
+For issue reports and live prompts, use the [stable demo references](08-effects-library.md#in-the-demo--stable-references).
 
 PAL budget reminder: 19,656 cycles per frame, 63 per line, about 23 on a badline.
 

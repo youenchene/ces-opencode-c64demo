@@ -3,14 +3,15 @@
 ;
 ; Two parts, looping. Copper bars and scroller stay on screen the whole time.
 ;
-;   part 0 "ces"       rows  1-11 : Codeurs en Seine logo (custom charset A), shine sweep
+;   D07 part "ces"     rows  1-11 : D03 Codeurs en Seine logo (custom charset A), shine sweep
 ;                      row  12    : "rouen * kindarena * 19.11.2026"
-;                      rows 14-23 : Rouen skyline over the Seine (custom charset B), water shimmer
-;   part 1 "opencode"  rows  1-5  : big "opencode" block logo, rainbow sweep
+;                      rows 14-23 : D04 Rouen skyline (custom charset B), water shimmer
+;   D08 part "opencode" rows  1-5 : D05 big "opencode" block logo, rainbow sweep
 ;                      row   7    : subtitle
-;                      rows  9-21 : terminal "typer" simulating an opencode session
-;   always             top border : stable raster "copper" bars    (irq_bars1/irq_bars2)
-;                      row  24    : 1x1 smooth scroller            (irq_split/irq_bottom)
+;                      rows  9-21 : D06 terminal "typer" simulating an opencode session
+;   always             top border : D01 stable raster "copper" bars (irq_bars1/irq_bars2)
+;                      row  24    : D02 1x1 smooth scroller (irq_split/irq_bottom)
+; Effect references: docs/08-effects-library.md
 ;
 ; Charset split: charset A above row 13, charset B from row 13 down (irq_mid). Both hold the
 ; ROM font in codes $00-$5f, so text renders the same in either. Keep row 13 free of graphics.
@@ -18,6 +19,7 @@
 ; Build:  make          -> build/opencode.prg
 ;         make d64      -> build/opencode.d64 (for real hardware)
 ;         make run      -> launch in VICE (x64sc)
+;         make run-d07  -> launch in VICE and stay on D07
 ;         make gfx      -> regenerate src/gfx/*.asm from assets/
 ; Music:  src/music/music.sid at $1000 (Teh Disco by Jammer), on by default when the file exists.
 ;         make MUSIC=0 to build without it, make TIMING=1 to see its CPU cost (docs/05-music.md)
@@ -161,7 +163,7 @@ nmi:    rti
 ; Parts
 ; =============================================================================
 
-part_ces:
+part_ces:                       ; D07
         lda #0
         sta part
         lda #<CES_FRAMES
@@ -189,7 +191,7 @@ part_ces:
         bpl -
         rts
 
-part_opencode:
+part_opencode:                  ; D08
         lda #1
         sta part
         lda #GREY
@@ -201,6 +203,7 @@ part_opencode:
 ces_update:
         jsr ces_shine
         jsr water_colors
+!if DEMO_D07_ONLY = 0 {
         lda part_timer          ; 16-bit countdown
         bne +
         dec part_timer+1
@@ -209,13 +212,15 @@ ces_update:
         ora part_timer+1
         bne +
         jmp part_opencode
-+       rts
++
+}
+        rts
 
 ; =============================================================================
 ; IRQ handlers
 ; =============================================================================
 
-; ---- mid screen: switch to charset B (row 13 holds text only) -----------------
+; ---- D04: switch to charset B (row 13 holds text only) ------------------------
 irq_mid:
         +irq_enter
         lda #MEMPTR_B
@@ -223,7 +228,7 @@ irq_mid:
         +set_irq irq_split, SPLIT_LINE
         +irq_exit
 
-; ---- split: apply fine scroll for the scroller row --------------------------
+; ---- D02: apply fine scroll for the scroller row -----------------------------
 irq_split:
         +irq_enter
         lda scroll_x            ; bit3=0 -> 38 columns, hides edge chars
@@ -253,7 +258,7 @@ irq_bottom:
         +set_irq irq_bars1, BAR_LINE
         +irq_exit
 
-; ---- stable raster bars (double IRQ), must not cross a page ------------------
+; ---- D01: stable raster bars (double IRQ), must not cross a page --------------
         !align 255, 0
 irq_bars1:
         sta save_a
@@ -383,7 +388,7 @@ blit:
 ; Effects
 ; =============================================================================
 
-rotate_bars:
+rotate_bars:                    ; D01
         lda bars
         pha
         ldx #0
@@ -396,7 +401,7 @@ rotate_bars:
         sta bars+BAR_COUNT-1
         rts
 
-; ---- Codeurs en Seine logo: diagonal shine sweeping across ----------------------
+; ---- D03: diagonal shine sweeping across the Codeurs en Seine logo ---------------
 ces_shine:
         dec shine_phase
         ldx #ces_logo_W-1
@@ -418,7 +423,7 @@ ces_shine:
         jmp -                   ; unrolled body is too long for a branch
 +       rts
 
-; ---- the Seine: colour waves flowing along the water row ------------------------
+; ---- D04: colour waves flowing along the Seine -----------------------------------
 water_colors:
         lda frame
         and #1
@@ -436,7 +441,7 @@ water_colors:
         bpl -
         rts
 
-; ---- opencode logo: '#' -> reverse space, anything else -> space ---------------
+; ---- D05 opencode logo: '#' -> reverse space, anything else -> space -----------
 draw_logo:
         !for r, 0, 4 {
         ldx #30
@@ -484,7 +489,7 @@ draw_subtitle:
         bne -
 +       rts
 
-; ---- scroller -------------------------------------------------------------------
+; ---- D02 smooth scroller --------------------------------------------------------
 scroller_init:
         lda #<scroll_text
         sta zp_scroll
@@ -524,7 +529,7 @@ scroller_update:
         inc zp_scroll+1
 .sdone: rts
 
-; ---- typer: simulated opencode terminal session ---------------------------------
+; ---- D06 typer: simulated opencode terminal session ------------------------------
 typer_reset:
         lda #$20                ; clear typer area (13 rows = 520 bytes)
         ldx #0
