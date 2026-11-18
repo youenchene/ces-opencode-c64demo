@@ -18,7 +18,7 @@ main{padding:0 24px 40px}
 h2{color:var(--hi);margin:28px 0 4px}
 .lead{margin:0 0 14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.card{background:var(--panel);padding:12px;border:2px solid #000;display:flex;flex-direction:column}
+.card{background:var(--panel);padding:12px;border:2px solid #000;display:flex;flex-direction:column;scroll-margin-top:70px}
 .card.done{border-color:var(--ok)}
 .pic{position:relative;background:#000;display:flex;align-items:center;justify-content:center;min-height:120px;margin-bottom:8px}
 .pic img,.pic canvas{width:100%;image-rendering:pixelated;display:block}
@@ -39,505 +39,499 @@ footer{padding:16px 24px;background:#000;font-size:12px}
 <body>
 <header>
   <h1>**** OPENCODE C64 — DEMO EFFECTS ****</h1>
-  <p>73 effects for the Codeurs en Seine 2026 demo. Green cards run in the demo today (real captures);
-  the rest is the library from <code>docs/08-effects-library.md</code>, previewed as browser simulations.</p>
+  <p>72 demo references, examples, and recipes for Codeurs en Seine 2026.
+  Green cards show what runs in the demo today.</p>
 </header>
 <nav>
-  <a href="#done">In the demo</a><a href="#tierA">Tier A</a><a href="#tierB">Tier B</a><a href="#tierC">Tier C</a>
-  <input id="q" placeholder="search (plasma, sprite, border...)">
+  <a href="#done">In the demo</a><a href="#examples">Examples</a><a href="#tierA">Tier A</a><a href="#tierB">Tier B</a><a href="#tierC">Tier C</a>
+  <input id="q" placeholder="search (D01, plasma, sprite...)">
 </nav>
 <main>
-<section id="done"><h2>Demo and example captures (14)</h2><p class="lead">Animated captures of the real program running in VICE (<code>make gifs</code>).</p><div class="grid"><article class="card done">
-  <div class="pic"><img src="img/effects/demo-ces.gif" alt="Part &quot;ces&quot; (full screen)" loading="lazy"></div>
-  <h3>Part &quot;ces&quot; (full screen) <span class="tag ok">in the demo</span></h3>
-  <p>Codeurs en Seine logo, date line, Rouen skyline over the Seine, copper bars and scroller.</p>
-  <p class="meta">Code: <code>src/main.asm part_ces</code> · capture: real VICE (PAL)</p>
-</article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/demo-opencode.gif" alt="Part &quot;opencode&quot; (full screen)" loading="lazy"></div>
-  <h3>Part &quot;opencode&quot; (full screen) <span class="tag ok">in the demo</span></h3>
-  <p>Block logo with rainbow, subtitle and the simulated terminal session.</p>
-  <p class="meta">Code: <code>src/main.asm part_opencode</code> · capture: real VICE (PAL)</p>
-</article>
-<article class="card done">
+<section id="done"><h2>In the demo (8)</h2><p class="lead">Use these reference IDs in prompts and issue reports. Captures show the real program running in PAL VICE.</p><div class="grid"><article id="D01" class="card done" data-text="d01 stable raster copper bars colour gradients roll through the top border, one colour per raster line.">
   <div class="pic"><img src="img/effects/copper-bars.gif" alt="Stable raster copper bars" loading="lazy"></div>
-  <h3>Stable raster copper bars <span class="tag ok">in the demo</span></h3>
-  <p>Double-IRQ stable raster, one colour per raster line in the top border, rotated every frame.</p>
-  <p class="meta">Code: <code>irq_bars1/2, rotate_bars</code> · capture: real VICE (PAL)</p>
+  <h3><a class="id" href="#D01">D01</a> Stable raster copper bars <span class="tag ok">in the demo</span></h3>
+  <p>Colour gradients roll through the top border, one colour per raster line.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>irq_bars1</code>, <code>irq_bars2</code>, <code>rotate_bars</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
+<article id="D02" class="card done" data-text="d02 1x1 smooth scroller the bottom text row scrolls left while the rest of the screen stays still.">
   <div class="pic"><img src="img/effects/scroller.gif" alt="1x1 smooth scroller" loading="lazy"></div>
-  <h3>1x1 smooth scroller <span class="tag ok">in the demo</span></h3>
-  <p>$d016 fine scroll + char shift, raster split so only row 24 moves, 38-column mode hides the edges.</p>
-  <p class="meta">Code: <code>irq_split, scroller_update</code> · capture: real VICE (PAL)</p>
+  <h3><a class="id" href="#D02">D02</a> 1x1 smooth scroller <span class="tag ok">in the demo</span></h3>
+  <p>The bottom text row scrolls left while the rest of the screen stays still.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>irq_split</code>, <code>scroller_update</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
+<article id="D03" class="card done" data-text="d03 charset logo + shine sweep a white glint crosses the codeurs en seine logo.">
   <div class="pic"><img src="img/effects/ces-shine.gif" alt="Charset logo + shine sweep" loading="lazy"></div>
-  <h3>Charset logo + shine sweep <span class="tag ok">in the demo</span></h3>
-  <p>Official logo converted to 106 custom chars; a white glint crosses it through colour RAM only.</p>
-  <p class="meta">Code: <code>ces_shine, tools/img2chars.py</code> · capture: real VICE (PAL)</p>
+  <h3><a class="id" href="#D03">D03</a> Charset logo + shine sweep <span class="tag ok">in the demo</span></h3>
+  <p>A white glint crosses the Codeurs en Seine logo.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>part_ces</code>, <code>ces_shine</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
+<article id="D04" class="card done" data-text="d04 charset split + water shimmer a second charset shows the rouen skyline while blue tones cycle across the seine.">
   <div class="pic"><img src="img/effects/rouen-seine.gif" alt="Charset split + water shimmer" loading="lazy"></div>
-  <h3>Charset split + water shimmer <span class="tag ok">in the demo</span></h3>
-  <p>Second charset below row 13 (raster IRQ on $d018) for the skyline; the Seine cycles blue tones.</p>
-  <p class="meta">Code: <code>irq_mid, water_colors</code> · capture: real VICE (PAL)</p>
+  <h3><a class="id" href="#D04">D04</a> Charset split + water shimmer <span class="tag ok">in the demo</span></h3>
+  <p>A second charset shows the Rouen skyline while blue tones cycle across the Seine.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>irq_mid</code>, <code>water_colors</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
+<article id="D05" class="card done" data-text="d05 colour-cycled block logo a diagonal rainbow sweeps across the opencode logo.">
   <div class="pic"><img src="img/effects/logo-rainbow.gif" alt="Colour-cycled block logo" loading="lazy"></div>
-  <h3>Colour-cycled block logo <span class="tag ok">in the demo</span></h3>
-  <p>Logo built from reverse spaces; a diagonal rainbow runs through colour RAM.</p>
-  <p class="meta">Code: <code>draw_logo, logo_colors</code> · capture: real VICE (PAL)</p>
+  <h3><a class="id" href="#D05">D05</a> Colour-cycled block logo <span class="tag ok">in the demo</span></h3>
+  <p>A diagonal rainbow sweeps across the opencode logo.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>draw_logo</code>, <code>logo_colors</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
+<article id="D06" class="card done" data-text="d06 terminal typer a simulated terminal session prints character by character with a blinking cursor.">
   <div class="pic"><img src="img/effects/typer.gif" alt="Terminal typer" loading="lazy"></div>
-  <h3>Terminal typer <span class="tag ok">in the demo</span></h3>
-  <p>Byte stream with colour/pause/newline codes, printed char by char with a blinking cursor.</p>
-  <p class="meta">Code: <code>typer_update</code> · capture: real VICE (PAL)</p>
+  <h3><a class="id" href="#D06">D06</a> Terminal typer <span class="tag ok">in the demo</span></h3>
+  <p>A simulated terminal session prints character by character with a blinking cursor.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>typer_update</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/ex-hello.gif" alt="Example 00: minimal executable" loading="lazy"></div>
-  <h3>Example 00: minimal executable <span class="tag ok">in the demo</span></h3>
+<article id="D07" class="card done" data-text="d07 part &quot;ces&quot; (full screen) codeurs en seine logo and date above the rouen skyline, with copper bars and scroller.">
+  <div class="pic"><img src="img/effects/demo-ces.gif" alt="Part &quot;ces&quot; (full screen)" loading="lazy"></div>
+  <h3><a class="id" href="#D07">D07</a> Part &quot;ces&quot; (full screen) <span class="tag ok">in the demo</span></h3>
+  <p>Codeurs en Seine logo and date above the Rouen skyline, with copper bars and scroller.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>part_ces</code>, <code>ces_update</code> · capture: real VICE (PAL)</p>
+</article>
+<article id="D08" class="card done" data-text="d08 part &quot;opencode&quot; (full screen) block logo, subtitle and simulated terminal session, with copper bars and scroller.">
+  <div class="pic"><img src="img/effects/demo-opencode.gif" alt="Part &quot;opencode&quot; (full screen)" loading="lazy"></div>
+  <h3><a class="id" href="#D08">D08</a> Part &quot;opencode&quot; (full screen) <span class="tag ok">in the demo</span></h3>
+  <p>Block logo, subtitle and simulated terminal session, with copper bars and scroller.</p>
+  <p class="meta">Code: <code>src/main.asm</code>: <code>part_opencode</code> · capture: real VICE (PAL)</p>
+</article></div></section>
+<section id="examples"><h2>Standalone examples (5)</h2><div class="grid"><article id="example-00" class="card" data-text="00 minimal executable basic upstart, machine takeover, frame sync by polling $d012, border colour cycle.">
+  <div class="pic"><img src="img/effects/ex-hello.gif" alt="Minimal executable" loading="lazy"></div>
+  <h3><a class="id" href="#example-00">00</a> Minimal executable <span class="tag ok">standalone example</span></h3>
   <p>BASIC upstart, machine takeover, frame sync by polling $d012, border colour cycle.</p>
   <p class="meta">Code: <code>docs/examples/00_hello.asm</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/ex-raster-irq.gif" alt="Example 01: raster IRQ split" loading="lazy"></div>
-  <h3>Example 01: raster IRQ split <span class="tag ok">in the demo</span></h3>
+<article id="example-01" class="card" data-text="01 raster irq split two chained raster interrupts split the screen into colour zones.">
+  <div class="pic"><img src="img/effects/ex-raster-irq.gif" alt="Raster IRQ split" loading="lazy"></div>
+  <h3><a class="id" href="#example-01">01</a> Raster IRQ split <span class="tag ok">standalone example</span></h3>
   <p>Two chained raster interrupts split the screen into colour zones.</p>
   <p class="meta">Code: <code>docs/examples/01_raster_irq.asm</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/ex-stable-bars.gif" alt="Example 02: stable raster bars" loading="lazy"></div>
-  <h3>Example 02: stable raster bars <span class="tag ok">in the demo</span></h3>
+<article id="example-02" class="card" data-text="02 stable raster bars full-height cycle-exact bars with the screen blanked (no badlines).">
+  <div class="pic"><img src="img/effects/ex-stable-bars.gif" alt="Stable raster bars" loading="lazy"></div>
+  <h3><a class="id" href="#example-02">02</a> Stable raster bars <span class="tag ok">standalone example</span></h3>
   <p>Full-height cycle-exact bars with the screen blanked (no badlines).</p>
   <p class="meta">Code: <code>docs/examples/02_stable_raster_bars.asm</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/ex-scroller.gif" alt="Example 03: smooth scroller" loading="lazy"></div>
-  <h3>Example 03: smooth scroller <span class="tag ok">in the demo</span></h3>
+<article id="example-03" class="card" data-text="03 smooth scroller the scroller technique on its own.">
+  <div class="pic"><img src="img/effects/ex-scroller.gif" alt="Smooth scroller" loading="lazy"></div>
+  <h3><a class="id" href="#example-03">03</a> Smooth scroller <span class="tag ok">standalone example</span></h3>
   <p>The scroller technique on its own.</p>
   <p class="meta">Code: <code>docs/examples/03_smooth_scroller.asm</code> · capture: real VICE (PAL)</p>
 </article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/ex-sprites-sine.gif" alt="Example 04: sprites on sine tables" loading="lazy"></div>
-  <h3>Example 04: sprites on sine tables <span class="tag ok">in the demo</span></h3>
+<article id="example-04" class="card" data-text="04 sprites on sine tables 8 hardware sprites following sine tables generated at assemble time, x msb handling.">
+  <div class="pic"><img src="img/effects/ex-sprites-sine.gif" alt="Sprites on sine tables" loading="lazy"></div>
+  <h3><a class="id" href="#example-04">04</a> Sprites on sine tables <span class="tag ok">standalone example</span></h3>
   <p>8 hardware sprites following sine tables generated at assemble time, X MSB handling.</p>
   <p class="meta">Code: <code>docs/examples/04_sprites_sine.asm</code> · capture: real VICE (PAL)</p>
-</article>
-<article class="card done">
-  <div class="pic"><img src="img/effects/ex-heads.gif" alt="Example B30: bouncing portrait sprites" loading="lazy"></div>
-  <h3>Example B30: bouncing portrait sprites <span class="tag ok">standalone example</span></h3>
-  <p>Two portrait cutouts spin like wheels and bounce off the screen edges. Standalone example.</p>
-  <p class="meta">Code: <code>docs/examples/B30_rotating_heads.asm</code> · capture: real VICE (PAL)</p>
 </article></div></section>
-<section id="tierA" class="tier"><h2>Tier A — one-prompt effects (17)</h2><p class="lead">Data or colour-RAM change only; safe to do live on stage. Each preview is labelled as a PAL VICE capture or a browser simulation.</p><div class="grid"><article id="A1" class="card" data-tier="A" data-text="copper colour schemes bars change palette (fire, ice, rainbow, rouen red &amp; gold)">
+<section id="tierA" class="tier"><h2>Tier A — one-prompt effects (17)</h2><p class="lead">Data or colour-RAM change only; safe to do live on stage. Each preview is labelled as a PAL VICE capture or a browser simulation.</p><div class="grid"><article id="A1" class="card" data-tier="A" data-text="a1 copper colour schemes bars change palette (fire, ice, rainbow, rouen red &amp; gold)">
   <div class="pic"><canvas data-fx="A1"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A1</span> Copper colour schemes</h3>
   <p>Bars change palette (fire, ice, rainbow, Rouen red &amp; gold)</p>
   <details><summary>How</summary><p>Edit the <code>bars</code> table. Brightness order: <code>0,6,9,11,2,4,8,12,14,10,5,15,3,7,13,1</code></p></details>
   <p class="meta">CPU: 0 · <code>bars</code> · example: <a href="examples/A01_copper_schemes.asm"><code>A01_copper_schemes.asm</code></a></p>
 </article>
-<article id="A2" class="card" data-tier="A" data-text="bar direction / speed bars scroll up, down, or faster">
+<article id="A2" class="card" data-tier="A" data-text="a2 bar direction / speed bars scroll up, down, or faster">
   <div class="pic"><canvas data-fx="A2"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A2</span> Bar direction / speed</h3>
   <p>Bars scroll up, down, or faster</p>
   <details><summary>How</summary><p>Rotate the table the other way, or call <code>rotate_bars</code> twice per frame</p></details>
   <p class="meta">CPU: ~1k · <code>rotate_bars</code> · example: <a href="examples/A02_bar_direction.asm"><code>A02_bar_direction.asm</code></a></p>
 </article>
-<article id="A3" class="card" data-tier="A" data-text="sine-moving bars several bars bounce on sine curves">
+<article id="A3" class="card" data-tier="A" data-text="a3 sine-moving bars several bars bounce on sine curves">
   <div class="pic"><canvas data-fx="A3"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A3</span> Sine-moving bars</h3>
   <p>Several bars bounce on sine curves</p>
   <details><summary>How</summary><p>Clear a 32-byte table, then plot 2-3 small gradients at <code>sine[t+i*40]</code>. Table built with <code>!for</code> + <code>sin()</code></p></details>
   <p class="meta">CPU: ~1.5k · replaces <code>rotate_bars</code> · example: <a href="examples/A03_sine_bars.asm"><code>A03_sine_bars.asm</code></a></p>
 </article>
-<article id="A4" class="card" data-tier="A" data-text="colour cycling text any text row cycles a gradient">
+<article id="A4" class="card" data-tier="A" data-text="a4 colour cycling text any text row cycles a gradient">
   <div class="pic"><canvas data-fx="A4"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A4</span> Colour cycling text</h3>
   <p>Any text row cycles a gradient</p>
   <details><summary>How</summary><p>Write <code>gradient[(x+phase)&amp;15]</code> to <code>$d800+row*40+x</code></p></details>
   <p class="meta">CPU: ~0.6k / row · part routine · example: <a href="examples/A04_color_cycle_text.asm"><code>A04_color_cycle_text.asm</code></a></p>
 </article>
-<article id="A5" class="card" data-tier="A" data-text="shine / glint a white band crosses a logo">
+<article id="A5" class="card" data-tier="A" data-text="a5 shine / glint a white band crosses a logo">
   <div class="pic"><canvas data-fx="A5"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A5</span> Shine / glint</h3>
   <p>A white band crosses a logo</p>
   <details><summary>How</summary><p>Same as A4, with a gradient that is mostly one colour (see <code>ces_shine</code>)</p></details>
   <p class="meta">CPU: ~2.5k · done · example: <a href="examples/A05_shine.asm"><code>A05_shine.asm</code></a></p>
 </article>
-<article id="A6" class="card" data-tier="A" data-text="rainbow scroller scroller letters cycle colours">
+<article id="A6" class="card" data-tier="A" data-text="a6 rainbow scroller scroller letters cycle colours">
   <div class="pic"><canvas data-fx="A6"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A6</span> Rainbow scroller</h3>
   <p>Scroller letters cycle colours</p>
   <details><summary>How</summary><p>A4 applied to row 24</p></details>
   <p class="meta">CPU: ~0.6k · <code>scroller_update</code> · example: <a href="examples/A06_rainbow_scroller.asm"><code>A06_rainbow_scroller.asm</code></a></p>
 </article>
-<article id="A7" class="card" data-tier="A" data-text="scroller speed / direction / wobble faster, reverse, or speed follows a sine">
+<article id="A7" class="card" data-tier="A" data-text="a7 scroller speed / direction / wobble faster, reverse, or speed follows a sine">
   <div class="pic"><canvas data-fx="A7"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A7</span> Scroller speed / direction / wobble</h3>
   <p>Faster, reverse, or speed follows a sine</p>
   <details><summary>How</summary><p><code>sbc #speed</code>, or speed = <code>sine[t]&gt;&gt;5</code>. Reverse = shift right and feed at column 0</p></details>
   <p class="meta">CPU: 0 · <code>scroller_update</code> · example: <a href="examples/A07_scroller_wobble.asm"><code>A07_scroller_wobble.asm</code></a></p>
 </article>
-<article id="A8" class="card" data-tier="A" data-text="border / background flash screen flashes on a beat">
+<article id="A8" class="card" data-tier="A" data-text="a8 border / background flash screen flashes on a beat">
   <div class="pic"><canvas data-fx="A8"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A8</span> Border / background flash</h3>
   <p>Screen flashes on a beat</p>
   <details><summary>How</summary><p>Set <code>$d020</code>/<code>$d021</code> to white, decay through a fade table over 6-8 frames. Trigger from a frame counter (beat table)</p></details>
   <p class="meta">CPU: ~50 · <code>irq_bottom</code> · example: <a href="examples/A08_beat_flash.asm"><code>A08_beat_flash.asm</code></a></p>
 </article>
-<article id="A9" class="card" data-tier="A" data-text="fade in / out smooth transitions between parts">
+<article id="A9" class="card" data-tier="A" data-text="a9 fade in / out smooth transitions between parts">
   <div class="pic"><canvas data-fx="A9"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A9</span> Fade in / out</h3>
   <p>Smooth transitions between parts</p>
   <details><summary>How</summary><p>Fade tables <code>fade[c]</code> → darker colour, applied to colour RAM over 8-16 frames (Veto&#x27;s colour ramps: <code><a href="https://codebase64.net/doku.php?id=vic">vic</a></code>)</p></details>
   <p class="meta">CPU: ~4k while fading · part switch · example: <a href="examples/A09_fade.asm"><code>A09_fade.asm</code></a></p>
 </article>
-<article id="A10" class="card" data-tier="A" data-text="text reveal / wipe text appears column by column, or randomly">
+<article id="A10" class="card" data-tier="A" data-text="a10 text reveal / wipe text appears column by column, or randomly">
   <div class="pic"><canvas data-fx="A10"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A10</span> Text reveal / wipe</h3>
   <p>Text appears column by column, or randomly</p>
   <details><summary>How</summary><p>Colour RAM starts black; per frame, set N cells to their real colour (column order or a random-permutation table)</p></details>
   <p class="meta">CPU: small · part init · example: <a href="examples/A10_text_reveal.asm"><code>A10_text_reveal.asm</code></a></p>
 </article>
-<article id="A11" class="card" data-tier="A" data-text="typewriter tweaks different speed, colours, extra lines">
+<article id="A11" class="card" data-tier="A" data-text="a11 typewriter tweaks different speed, colours, extra lines">
   <div class="pic"><canvas data-fx="A11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A11</span> Typewriter tweaks</h3>
   <p>Different speed, colours, extra lines</p>
   <details><summary>How</summary><p><code>TYPE_SPEED</code>, <code>typer_text</code> control bytes</p></details>
   <p class="meta">CPU: 0 · <code>typer_text</code> · example: <a href="examples/A11_typewriter.asm"><code>A11_typewriter.asm</code></a></p>
 </article>
-<article id="A12" class="card" data-tier="A" data-text="char animation waves, blinking windows, a waving flag">
+<article id="A12" class="card" data-tier="A" data-text="a12 char animation waves, blinking windows, a waving flag">
   <div class="pic"><canvas data-fx="A12"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A12</span> Char animation</h3>
   <p>Waves, blinking windows, a waving flag</p>
   <details><summary>How</summary><p>Rewrite 8 bytes of one charset char per frame (e.g. ROL the water char bytes)</p></details>
   <p class="meta">CPU: ~100 · <code>rouen</code> charset B · example: <a href="examples/A12_char_animation.asm"><code>A12_char_animation.asm</code></a></p>
 </article>
-<article id="A13" class="card" data-tier="A" data-text="twinkling windows / stars skyline windows and stars flicker">
+<article id="A13" class="card" data-tier="A" data-text="a13 twinkling windows / stars skyline windows and stars flicker">
   <div class="pic"><canvas data-fx="A13"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A13</span> Twinkling windows / stars</h3>
   <p>Skyline windows and stars flicker</p>
   <details><summary>How</summary><p>Random colour-RAM cell from a table set to yellow, another to dark, each frame</p></details>
   <p class="meta">CPU: ~100 · <code>ces_update</code> · example: <a href="examples/A13_twinkle.asm"><code>A13_twinkle.asm</code></a></p>
 </article>
-<article id="A14" class="card" data-tier="A" data-text="glitch / noise burst short &quot;signal lost&quot; moment">
+<article id="A14" class="card" data-tier="A" data-text="a14 glitch / noise burst short &quot;signal lost&quot; moment">
   <div class="pic"><canvas data-fx="A14"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A14</span> Glitch / noise burst</h3>
   <p>Short &quot;signal lost&quot; moment</p>
   <details><summary>How</summary><p>For 5-10 frames: random <code>$d016</code> xscroll and <code>$d020</code> per frame, garbage colours on a few rows</p></details>
   <p class="meta">CPU: small · part switch · example: <a href="examples/A14_glitch.asm"><code>A14_glitch.asm</code></a></p>
 </article>
-<article id="A15" class="card" data-tier="A" data-text="screen shake whole screen jolts on a beat">
+<article id="A15" class="card" data-tier="A" data-text="a15 screen shake whole screen jolts on a beat">
   <div class="pic"><canvas data-fx="A15"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A15</span> Screen shake</h3>
   <p>Whole screen jolts on a beat</p>
   <details><summary>How</summary><p>Change <code>$d011</code> YSCROLL bits (keep bit 4 and bit 3) for a few frames; clamp to 0-7</p></details>
   <p class="meta">CPU: 0 · <code>irq_bottom</code> · example: <a href="examples/A15_screen_shake.asm"><code>A15_screen_shake.asm</code></a></p>
 </article>
-<article id="A16" class="card" data-tier="A" data-text="logo colour themes opencode logo in brand colours">
+<article id="A16" class="card" data-tier="A" data-text="a16 logo colour themes opencode logo in brand colours">
   <div class="pic"><canvas data-fx="A16"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A16</span> Logo colour themes</h3>
   <p>Opencode logo in brand colours</p>
   <details><summary>How</summary><p>Edit <code>logo_gradient</code> / <code>shine_gradient</code></p></details>
   <p class="meta">CPU: 0 · data · example: <a href="examples/A16_logo_themes.asm"><code>A16_logo_themes.asm</code></a></p>
 </article>
-<article id="A17" class="card" data-tier="A" data-text="greetings list rotating group/sponsor names">
+<article id="A17" class="card" data-tier="A" data-text="a17 greetings list rotating group/sponsor names">
   <div class="pic"><canvas data-fx="A17"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">A17</span> Greetings list</h3>
   <p>Rotating group/sponsor names</p>
   <details><summary>How</summary><p>Text table + A10 wipe every N seconds</p></details>
   <p class="meta">CPU: small · new mini-part · example: <a href="examples/A17_greetings.asm"><code>A17_greetings.asm</code></a></p>
 </article></div></section>
-<section id="tierB" class="tier"><h2>Tier B — small routines (30)</h2><p class="lead">New routine or jitter-tolerant raster IRQ; prepare beforehand. Each preview is labelled as a PAL VICE capture or a browser simulation.</p><div class="grid"><article id="B1" class="card" data-tier="B" data-text="2x2 scroller big scroller, letters 2 chars wide/high">
+<section id="tierB" class="tier"><h2>Tier B — small routines (30)</h2><p class="lead">New routine or jitter-tolerant raster IRQ; prepare beforehand. Each preview is labelled as a PAL VICE capture or a browser simulation.</p><div class="grid"><article id="B1" class="card" data-tier="B" data-text="b1 2x2 scroller big scroller, letters 2 chars wide/high">
   <div class="pic"><canvas data-fx="B1"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B1</span> 2x2 scroller</h3>
   <p>Big scroller, letters 2 chars wide/high</p>
   <details><summary>How</summary><p>Each letter = 4 chars from a 2x2 charset. Shift every 2 steps of the fine scroll</p></details>
   <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:2x2_sidescroll">base:2x2_sidescroll</a></code> · example: <a href="examples/B01_2x2_scroller.asm"><code>B01_2x2_scroller.asm</code></a></p>
 </article>
-<article id="B2" class="card" data-tier="B" data-text="up-scroller (credits roll) text scrolls upwards">
+<article id="B2" class="card" data-tier="B" data-text="b2 up-scroller (credits roll) text scrolls upwards">
   <div class="pic"><canvas data-fx="B2"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B2</span> Up-scroller (credits roll)</h3>
   <p>Text scrolls upwards</p>
   <details><summary>How</summary><p><code>$d011</code> YSCROLL 7→0, then move rows up one char line (double buffer to avoid tearing)</p></details>
   <p class="meta">CPU: ~3k on move · <code><a href="https://codebase64.net/doku.php?id=base:1x1_upscroll">base:1x1_upscroll</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:2x2_upscroll_with_space_linefeed">base:2x2_upscroll_with_space_linefeed</a></code> · example: <a href="examples/B02_up_scroller.asm"><code>B02_up_scroller.asm</code></a></p>
 </article>
-<article id="B3" class="card" data-tier="B" data-text="8x char zoom scroller huge letters made of chars">
+<article id="B3" class="card" data-tier="B" data-text="b3 8x char zoom scroller huge letters made of chars">
   <div class="pic"><canvas data-fx="B3"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B3</span> 8x char zoom scroller</h3>
   <p>Huge letters made of chars</p>
   <details><summary>How</summary><p>Read ROM font bits, plot $a0/$20 per bit into a 8-row band</p></details>
   <p class="meta">CPU: ~4k · <code><a href="https://codebase64.net/doku.php?id=base:8x_scale_charset_scrolling_message">base:8x_scale_charset_scrolling_message</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:realtime_8x_char_zoom">base:realtime_8x_char_zoom</a></code> · example: <a href="examples/B03_8x_zoom_scroller.asm"><code>B03_8x_zoom_scroller.asm</code></a></p>
 </article>
-<article id="B4" class="card" data-tier="B" data-text="sprite scroller scroller in sprites, can go in the border">
+<article id="B4" class="card" data-tier="B" data-text="b4 sprite scroller scroller in sprites, can go in the border">
   <div class="pic"><canvas data-fx="B4"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B4</span> Sprite scroller</h3>
   <p>Scroller in sprites, can go in the border</p>
   <details><summary>How</summary><p>ROL a sprite strip, one bit per frame per row</p></details>
   <p class="meta">CPU: ~3k · <code><a href="https://codebase64.net/doku.php?id=base:scrolltext_using_sprites">base:scrolltext_using_sprites</a></code> · example: <a href="examples/B04_sprite_scroller.asm"><code>B04_sprite_scroller.asm</code></a></p>
 </article>
-<article id="B5" class="card" data-tier="B" data-text="waving sprite letters one letter per sprite on a sine">
+<article id="B5" class="card" data-tier="B" data-text="b5 waving sprite letters one letter per sprite on a sine">
   <div class="pic"><canvas data-fx="B5"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B5</span> Waving sprite letters</h3>
   <p>One letter per sprite on a sine</p>
   <details><summary>How</summary><p>Sprite pointers = letter shapes; Y from sine table</p></details>
   <p class="meta">CPU: ~1k · <code><a href="https://codebase64.net/doku.php?id=base:waving_sprite_scroll">base:waving_sprite_scroll</a></code>, our <code>examples/04</code> · example: <a href="examples/B05_waving_sprite_letters.asm"><code>B05_waving_sprite_letters.asm</code></a></p>
 </article>
-<article id="B6" class="card" data-tier="B" data-text="sprite snake / lissajous 8 sprites chase each other">
+<article id="B6" class="card" data-tier="B" data-text="b6 sprite snake / lissajous 8 sprites chase each other">
   <div class="pic"><canvas data-fx="B6"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B6</span> Sprite snake / Lissajous</h3>
   <p>8 sprites chase each other</p>
   <details><summary>How</summary><p>Two sine tables with different speeds (our <code>examples/04</code>)</p></details>
   <p class="meta">CPU: ~1k · done as example · example: <a href="examples/B06_sprite_snake.asm"><code>B06_sprite_snake.asm</code></a></p>
 </article>
-<article id="B7" class="card" data-tier="B" data-text="sprite stretching sprites grow taller line by line">
+<article id="B7" class="card" data-tier="B" data-text="b7 sprite stretching sprites grow taller line by line">
   <div class="pic"><canvas data-fx="B7"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B7</span> Sprite stretching</h3>
   <p>Sprites grow taller line by line</p>
   <details><summary>How</summary><p>Toggle <code>$d017</code> per raster line while the sprite is shown (needs per-line IRQ or a loop in the border)</p></details>
   <p class="meta">CPU: ~1 line each · <code><a href="https://codebase64.net/doku.php?id=base:stretching_sprites">base:stretching_sprites</a></code> · example: <a href="examples/B07_sprite_stretch.asm"><code>B07_sprite_stretch.asm</code></a></p>
 </article>
-<article id="B8" class="card" data-tier="B" data-text="8-sprite starfield stars moving sideways">
+<article id="B8" class="card" data-tier="B" data-text="b8 8-sprite starfield stars moving sideways">
   <div class="pic"><canvas data-fx="B8"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B8</span> 8-sprite starfield</h3>
   <p>Stars moving sideways</p>
   <details><summary>How</summary><p>8 one-pixel sprites, multiplexed down the screen at different speeds</p></details>
   <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:8_sprite_starfield">base:8_sprite_starfield</a></code> · example: <a href="examples/B08_sprite_starfield.asm"><code>B08_sprite_starfield.asm</code></a></p>
 </article>
-<article id="B9" class="card" data-tier="B" data-text="char starfield parallax stars behind text">
+<article id="B9" class="card" data-tier="B" data-text="b9 char starfield parallax stars behind text">
   <div class="pic"><canvas data-fx="B9"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B9</span> Char starfield</h3>
   <p>Parallax stars behind text</p>
   <details><summary>How</summary><p>Stars = pixels in a few chars, ROL the char bytes; or switch <code>$d018</code> between 8 pre-shifted charsets</p></details>
   <p class="meta">CPU: ~0.5k · <code><a href="https://codebase64.net/doku.php?id=base:rol_starfield_using_d018">base:rol_starfield_using_d018</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:starfield">base:starfield</a></code> · example: <a href="examples/B09_char_starfield.asm"><code>B09_char_starfield.asm</code></a></p>
 </article>
-<article id="B10" class="card" data-tier="B" data-text="dycp scroller letters each bounce on their own sine">
+<article id="B10" class="card" data-tier="B" data-text="b10 dycp scroller letters each bounce on their own sine">
   <div class="pic"><canvas data-fx="B10"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B10</span> DYCP</h3>
   <p>Scroller letters each bounce on their own sine</p>
   <details><summary>How</summary><p>Plot each letter&#x27;s 8 bytes into a 2-char-high column charset at Y = <code>sine[x+t]</code></p></details>
   <p class="meta">CPU: ~6-8k · C= Hacking 6 &quot;Demo corner&quot; (<code><a href="https://codebase64.net/doku.php?id=magazines:chacking6">magazines:chacking6</a></code>) · example: <a href="examples/B10_dycp.asm"><code>B10_dycp.asm</code></a></p>
 </article>
-<article id="B11" class="card" data-tier="B" data-text="colour plasma smooth flowing colours">
+<article id="B11" class="card" data-tier="B" data-text="b11 colour plasma smooth flowing colours">
   <div class="pic"><canvas data-fx="B11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B11</span> Colour plasma</h3>
   <p>Smooth flowing colours</p>
   <details><summary>How</summary><p>Colour RAM = <code>pal[sin1[x+a]+sin2[y+b]+sin3[x+y+c]]</code>, half the screen per frame or a 20x12 window</p></details>
   <p class="meta">CPU: ~10k full screen · <code><a href="https://codebase64.net/doku.php?id=base:colorcycleplasma">base:colorcycleplasma</a></code> · example: <a href="examples/B11_colour_plasma.asm"><code>B11_colour_plasma.asm</code></a></p>
 </article>
-<article id="B12" class="card" data-tier="B" data-text="charset plasma finer plasma with shading">
+<article id="B12" class="card" data-tier="B" data-text="b12 charset plasma finer plasma with shading">
   <div class="pic"><canvas data-fx="B12"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B12</span> Charset plasma</h3>
   <p>Finer plasma with shading</p>
   <details><summary>How</summary><p>Screen = plasma index, charset of 8-16 dither shades</p></details>
   <p class="meta">CPU: ~8k · same + <code><a href="https://codebase64.net/doku.php?id=base:4x4_fli_chunky_mode">base:4x4_fli_chunky_mode</a></code> idea · example: <a href="examples/B12_charset_plasma.asm"><code>B12_charset_plasma.asm</code></a></p>
 </article>
-<article id="B13" class="card" data-tier="B" data-text="fire burning flames rising">
+<article id="B13" class="card" data-tier="B" data-text="b13 fire burning flames rising">
   <div class="pic"><canvas data-fx="B13"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B13</span> Fire</h3>
   <p>Burning flames rising</p>
   <details><summary>How</summary><p>4x4 chunky pixels in chars, average 3 neighbours + decay, random bottom row</p></details>
   <p class="meta">CPU: ~8k · <code><a href="https://codebase64.net/doku.php?id=base:4x4_charset_fire_with_lots_of_colors">base:4x4_charset_fire_with_lots_of_colors</a></code> · example: <a href="examples/B13_fire.asm"><code>B13_fire.asm</code></a></p>
 </article>
-<article id="B14" class="card" data-tier="B" data-text="matrix rain falling green glyphs">
+<article id="B14" class="card" data-tier="B" data-text="b14 matrix rain falling green glyphs">
   <div class="pic"><canvas data-fx="B14"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B14</span> Matrix rain</h3>
   <p>Falling green glyphs</p>
   <details><summary>How</summary><p>Per-column drop position; head white, tail fades through <code>13,5,11</code></p></details>
   <p class="meta">CPU: ~2k · — · example: <a href="examples/B14_matrix_rain.asm"><code>B14_matrix_rain.asm</code></a></p>
 </article>
-<article id="B15" class="card" data-tier="B" data-text="logo swing logo sways left/right">
+<article id="B15" class="card" data-tier="B" data-text="b15 logo swing logo sways left/right">
   <div class="pic"><canvas data-fx="B15"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B15</span> Logo swing</h3>
   <p>Logo sways left/right</p>
   <details><summary>How</summary><p>Per char-row <code>$d016</code> change in a raster IRQ (char rows only, so jitter is harmless if done in the row&#x27;s last line)</p></details>
   <p class="meta">CPU: ~0.5k · <code><a href="https://codebase64.net/doku.php?id=base:logo_swing">base:logo_swing</a></code> · example: <a href="examples/B15_logo_swing.asm"><code>B15_logo_swing.asm</code></a></p>
 </article>
-<article id="B16" class="card" data-tier="B" data-text="fld bounce logo/screen drops and bounces">
+<article id="B16" class="card" data-tier="B" data-text="b16 fld bounce logo/screen drops and bounces">
   <div class="pic"><canvas data-fx="B16"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B16</span> FLD bounce</h3>
   <p>Logo/screen drops and bounces</p>
   <details><summary>How</summary><p>Delay the badline by rewriting <code>$d011</code> each line for N lines; N follows a bounce table</p></details>
   <p class="meta">CPU: N lines · <code><a href="https://codebase64.net/doku.php?id=base:fld">base:fld</a></code> · example: <a href="examples/B16_fld_bounce.asm"><code>B16_fld_bounce.asm</code></a></p>
 </article>
-<article id="B17" class="card" data-tier="B" data-text="open top/bottom border sprites in the top and bottom borders">
+<article id="B17" class="card" data-tier="B" data-text="b17 open top/bottom border sprites in the top and bottom borders">
   <div class="pic"><canvas data-fx="B17"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B17</span> Open top/bottom border</h3>
   <p>Sprites in the top and bottom borders</p>
   <details><summary>How</summary><p>At line <code>$f9</code> set 24 rows (<code>$d011</code> bit 3 = 0), back to 25 before line <code>$fc</code></p></details>
   <p class="meta">CPU: ~0 · <code><a href="https://codebase64.net/doku.php?id=base:removing_the_top_bottom_border">base:removing_the_top_bottom_border</a></code> · example: <a href="examples/B17_open_border.asm"><code>B17_open_border.asm</code></a></p>
 </article>
-<article id="B18" class="card" data-tier="B" data-text="raster split curtains coloured background bands behind text">
+<article id="B18" class="card" data-tier="B" data-text="b18 raster split curtains coloured background bands behind text">
   <div class="pic"><canvas data-fx="B18"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B18</span> Raster split curtains</h3>
   <p>Coloured background bands behind text</p>
   <details><summary>How</summary><p><code>$d021</code> changes at a few lines via raster IRQs (between text rows)</p></details>
   <p class="meta">CPU: ~0.2k · <code><a href="https://codebase64.net/doku.php?id=base:horizontal_raster_split">base:horizontal_raster_split</a></code> · example: <a href="examples/B18_raster_split.asm"><code>B18_raster_split.asm</code></a></p>
 </article>
-<article id="B19" class="card" data-tier="B" data-text="rasterbars behind text bars visible through text background">
+<article id="B19" class="card" data-tier="B" data-text="b19 rasterbars behind text bars visible through text background">
   <div class="pic"><canvas data-fx="B19"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B19</span> Rasterbars behind text</h3>
   <p>Bars visible through text background</p>
   <details><summary>How</summary><p><code>$d021</code> per line with a stable loop, but only on non-badlines; simplest with bars in the border or with DEN=0 areas</p></details>
   <p class="meta">CPU: many lines · <code><a href="https://codebase64.net/doku.php?id=base:rasterbars_with_screen_on">base:rasterbars_with_screen_on</a></code> · example: <a href="examples/B19_bars_behind_text.asm"><code>B19_bars_behind_text.asm</code></a></p>
 </article>
-<article id="B20" class="card" data-tier="B" data-text="overlapping bars bars passing in front/behind each other">
+<article id="B20" class="card" data-tier="B" data-text="b20 overlapping bars bars passing in front/behind each other">
   <div class="pic"><canvas data-fx="B20"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B20</span> Overlapping bars</h3>
   <p>Bars passing in front/behind each other</p>
   <details><summary>How</summary><p>Draw bars into the table back to front, sorted by a depth sine</p></details>
   <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:overlapping_raster_bars">base:overlapping_raster_bars</a></code> · example: <a href="examples/B20_overlapping_bars.asm"><code>B20_overlapping_bars.asm</code></a></p>
 </article>
-<article id="B21" class="card" data-tier="B" data-text="charset blend-in logo/picture dissolves in pixel by pixel">
+<article id="B21" class="card" data-tier="B" data-text="b21 charset blend-in logo/picture dissolves in pixel by pixel">
   <div class="pic"><canvas data-fx="B21"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B21</span> Charset blend-in</h3>
   <p>Logo/picture dissolves in pixel by pixel</p>
   <details><summary>How</summary><p>AND/OR random masks onto the charset bytes over frames</p></details>
   <p class="meta">CPU: ~2k · <code><a href="https://codebase64.net/doku.php?id=base:8x8_charset_pixel-blend-in">base:8x8_charset_pixel-blend-in</a></code> · example: <a href="examples/B21_charset_blend.asm"><code>B21_charset_blend.asm</code></a></p>
 </article>
-<article id="B22" class="card" data-tier="B" data-text="ecm note writer text with 4 background colours, flashing">
+<article id="B22" class="card" data-tier="B" data-text="b22 ecm note writer text with 4 background colours, flashing">
   <div class="pic"><canvas data-fx="B22"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B22</span> ECM note writer</h3>
   <p>Text with 4 background colours, flashing</p>
   <details><summary>How</summary><p>Extended Colour Mode (<code>$d011</code> bit 6), cycle <code>$d021-$d024</code></p></details>
   <p class="meta">CPU: ~0 · <code><a href="https://codebase64.net/doku.php?id=base:colour_flashing_notewriter_style">base:colour_flashing_notewriter_style</a></code> · example: <a href="examples/B22_ecm_notewriter.asm"><code>B22_ecm_notewriter.asm</code></a></p>
 </article>
-<article id="B23" class="card" data-tier="B" data-text="3d dot ball / dot scroll rotating sphere or text made of dots">
+<article id="B23" class="card" data-tier="B" data-text="b23 3d dot ball / dot scroll rotating sphere or text made of dots">
   <div class="pic"><canvas data-fx="B23"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B23</span> 3D dot ball / dot scroll</h3>
   <p>Rotating sphere or text made of dots</p>
   <details><summary>How</summary><p>Precalculate rotated points (no multiply at run time), plot into a charset canvas, double buffer</p></details>
   <p class="meta">CPU: ~10k · <code><a href="https://codebase64.net/doku.php?id=base:3d_dot_scroll">base:3d_dot_scroll</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:dots_and_plots">base:dots_and_plots</a></code> · example: <a href="examples/B23_dot_ball.asm"><code>B23_dot_ball.asm</code></a></p>
 </article>
-<article id="B24" class="card" data-tier="B" data-text="vector bobs 3d object made of sprites">
+<article id="B24" class="card" data-tier="B" data-text="b24 vector bobs 3d object made of sprites">
   <div class="pic"><canvas data-fx="B24"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B24</span> Vector bobs</h3>
   <p>3D object made of sprites</p>
   <details><summary>How</summary><p>8 sprites (or multiplexed) at precalculated 3D projected positions</p></details>
   <p class="meta">CPU: ~2k · precalc in Python · example: <a href="examples/B24_vector_bobs.asm"><code>B24_vector_bobs.asm</code></a></p>
 </article>
-<article id="B25" class="card" data-tier="B" data-text="rotozoomer / tunnel (chunky) rotating, zooming texture or tunnel">
+<article id="B25" class="card" data-tier="B" data-text="b25 rotozoomer / tunnel (chunky) rotating, zooming texture or tunnel">
   <div class="pic"><canvas data-fx="B25"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B25</span> Rotozoomer / tunnel (chunky)</h3>
   <p>Rotating, zooming texture or tunnel</p>
   <details><summary>How</summary><p>Precalculated u/v lookup tables in a 40x25 or 20x12 char window, colour RAM output</p></details>
   <p class="meta">CPU: ~10-15k, 25 fps · — · example: <a href="examples/B25_tunnel.asm"><code>B25_tunnel.asm</code></a></p>
 </article>
-<article id="B26" class="card" data-tier="B" data-text="simple sprite multiplexer 16-24 sprites on screen">
+<article id="B26" class="card" data-tier="B" data-text="b26 simple sprite multiplexer 16-24 sprites on screen">
   <div class="pic"><canvas data-fx="B26"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B26</span> Simple sprite multiplexer</h3>
   <p>16-24 sprites on screen</p>
   <details><summary>How</summary><p>Re-use sprites lower down in raster IRQs, fixed Y bands (no sorting)</p></details>
   <p class="meta">CPU: ~1k · <code><a href="https://codebase64.net/doku.php?id=base:sprite_multiplexing">base:sprite_multiplexing</a></code> · example: <a href="examples/B26_sprite_multiplexer.asm"><code>B26_sprite_multiplexer.asm</code></a></p>
 </article>
-<article id="B27" class="card" data-tier="B" data-text="animated sprite logo big multicolour logo built from sprites">
+<article id="B27" class="card" data-tier="B" data-text="b27 animated sprite logo big multicolour logo built from sprites">
   <div class="pic"><canvas data-fx="B27"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B27</span> Animated sprite logo</h3>
   <p>Big multicolour logo built from sprites</p>
   <details><summary>How</summary><p>8 sprites expanded side by side, colours cycled</p></details>
   <p class="meta">CPU: ~0.2k · <code><a href="https://codebase64.net/doku.php?id=base:spriteintro">base:spriteintro</a></code> · example: <a href="examples/B27_sprite_logo.asm"><code>B27_sprite_logo.asm</code></a></p>
 </article>
-<article id="B28" class="card" data-tier="B" data-text="part sequencer many parts with timed transitions">
+<article id="B28" class="card" data-tier="B" data-text="b28 part sequencer many parts with timed transitions">
   <div class="pic"><canvas data-fx="B28"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B28</span> Part sequencer</h3>
   <p>Many parts with timed transitions</p>
   <details><summary>How</summary><p>Table <code>(frames, init, frame)</code> (see 04, &quot;Parts&quot;)</p></details>
   <p class="meta">CPU: ~0 · <code>main_loop</code> · example: <a href="examples/B28_part_sequencer.asm"><code>B28_part_sequencer.asm</code></a></p>
 </article>
-<article id="B29" class="card" data-tier="B" data-text="music sync flashes and bounces hit the beat">
+<article id="B29" class="card" data-tier="B" data-text="b29 music sync flashes and bounces hit the beat">
   <div class="pic"><canvas data-fx="B29"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B29</span> Music sync</h3>
   <p>Flashes and bounces hit the beat</p>
   <details><summary>How</summary><p>Beat table of frame numbers, or read voice 3 envelope <code>$d41c</code> if the tune uses voice 3 for drums</p></details>
   <p class="meta">CPU: ~0 · <code>irq_bottom</code> · example: <a href="examples/B29_music_sync.asm"><code>B29_music_sync.asm</code></a></p>
 </article>
-<article id="B30" class="card" data-tier="B" data-text="bouncing portrait sprites two cut-out portraits spin like wheels and bounce off the screen edges">
+<article id="B30" class="card" data-tier="B" data-text="b30 bouncing portrait sprites two cut-out portraits spin like wheels and bounce off the screen edges">
   <div class="pic"><img src="img/effects/ex-heads.gif" alt="Bouncing portrait sprites" loading="lazy"><span class="sim">PAL VICE capture</span></div>
   <h3><span class="id">B30</span> Bouncing portrait sprites</h3>
   <p>Two cut-out portraits spin like wheels and bounce off the screen edges</p>
   <details><summary>How</summary><p>Swap sprite pointers through 16 precalculated poses and reverse velocity at the edges</p></details>
   <p class="meta">CPU: ~1k · <code>tools/faces2sprites.py</code> · example: <a href="examples/B30_rotating_heads.asm"><code>B30_rotating_heads.asm</code></a></p>
 </article></div></section>
-<section id="tierC" class="tier"><h2>Tier C — cycle-exact / heavy (12)</h2><p class="lead">Stable raster on every line, big tables; prepare off-stage, test on hardware. Each preview is labelled as a PAL VICE capture or a browser simulation.</p><div class="grid"><article id="C1" class="card" data-tier="C" data-text="side-border opening graphics/sprites across the full width">
+<section id="tierC" class="tier"><h2>Tier C — cycle-exact / heavy (12)</h2><p class="lead">Stable raster on every line, big tables; prepare off-stage, test on hardware. Each preview is labelled as a PAL VICE capture or a browser simulation.</p><div class="grid"><article id="C1" class="card" data-tier="C" data-text="c1 side-border opening graphics/sprites across the full width">
   <div class="pic"><canvas data-fx="C1"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C1</span> Side-border opening</h3>
   <p>Graphics/sprites across the full width</p>
   <details><summary>How</summary><p><code>$d016</code> toggle on an exact cycle on <b>every</b> line, sprite and badline aware</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:removing_the_sideborders">base:removing_the_sideborders</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:sprites_in_bottom_sideborder">base:sprites_in_bottom_sideborder</a></code> · example: <a href="examples/C01_side_border.asm"><code>C01_side_border.asm</code></a></p>
 </article>
-<article id="C2" class="card" data-tier="C" data-text="tech-tech logo waves pixel by pixel per raster line">
+<article id="C2" class="card" data-tier="C" data-text="c2 tech-tech logo waves pixel by pixel per raster line">
   <div class="pic"><canvas data-fx="C2"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C2</span> Tech-tech</h3>
   <p>Logo waves pixel by pixel per raster line</p>
   <details><summary>How</summary><p>Per-line <code>$d016</code> + charset/screen switch, stable raster</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=magazines:chacking7">magazines:chacking7</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:techtech_fli">base:techtech_fli</a></code> · example: <a href="examples/C02_tech_tech.asm"><code>C02_tech_tech.asm</code></a></p>
 </article>
-<article id="C3" class="card" data-tier="C" data-text="dysp sprite letters moving on independent x/y sines across the border">
+<article id="C3" class="card" data-tier="C" data-text="c3 dysp sprite letters moving on independent x/y sines across the border">
   <div class="pic"><canvas data-fx="C3"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C3</span> DYSP</h3>
   <p>Sprite letters moving on independent X/Y sines across the border</p>
   <details><summary>How</summary><p>Per-line sprite register writes with a cycle table</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:dysp_d017">base:dysp_d017</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:dysp_cycle_table">base:dysp_cycle_table</a></code> · example: <a href="examples/C03_dysp.asm"><code>C03_dysp.asm</code></a></p>
 </article>
-<article id="C4" class="card" data-tier="C" data-text="fpp / stretcher picture stretched and bent vertically">
+<article id="C4" class="card" data-tier="C" data-text="c4 fpp / stretcher picture stretched and bent vertically">
   <div class="pic"><canvas data-fx="C4"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C4</span> FPP / stretcher</h3>
   <p>Picture stretched and bent vertically</p>
   <details><summary>How</summary><p>Repeat or pick any graphics line per raster line</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fpp">base:fpp</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:fli-fpp-scroller">base:fli-fpp-scroller</a></code> · example: <a href="examples/C04_fpp_stretcher.asm"><code>C04_fpp_stretcher.asm</code></a></p>
 </article>
-<article id="C5" class="card" data-tier="C" data-text="line crunch / vsp / agsp hardware scroll of the whole screen with no copying">
+<article id="C5" class="card" data-tier="C" data-text="c5 line crunch / vsp / agsp hardware scroll of the whole screen with no copying">
   <div class="pic"><canvas data-fx="C5"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C5</span> Line crunch / VSP / AGSP</h3>
   <p>Hardware scroll of the whole screen with no copying</p>
   <details><summary>How</summary><p>VIC timing quirks; VSP crashes some real machines</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:linecrunch">base:linecrunch</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:horizontal_screen_positioning_hsp">base:horizontal_screen_positioning_hsp</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:agsp_any_given_screen_position">base:agsp_any_given_screen_position</a></code> · example: <a href="examples/C05_line_crunch.asm"><code>C05_line_crunch.asm</code></a></p>
 </article>
-<article id="C6" class="card" data-tier="C" data-text="fli / afli pictures pictures with far more colours">
+<article id="C6" class="card" data-tier="C" data-text="c6 fli / afli pictures pictures with far more colours">
   <div class="pic"><canvas data-fx="C6"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C6</span> FLI / AFLI pictures</h3>
   <p>Pictures with far more colours</p>
   <details><summary>How</summary><p><code>$d018</code>/<code>$d011</code> every line, 16 KB data, own VIC bank</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:fli">base:fli</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:fli_displayer">base:fli_displayer</a></code> · example: <a href="examples/C06_fli.asm"><code>C06_fli.asm</code></a></p>
 </article>
-<article id="C7" class="card" data-tier="C" data-text="twister / x-rotator / waving carpet rotating bar of graphics">
+<article id="C7" class="card" data-tier="C" data-text="c7 twister / x-rotator / waving carpet rotating bar of graphics">
   <div class="pic"><canvas data-fx="C7"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C7</span> Twister / X-rotator / waving carpet</h3>
   <p>Rotating bar of graphics</p>
   <details><summary>How</summary><p>2nd-line FLI tricks</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:twisters_x-rotators_and_waving_carpets">base:twisters_x-rotators_and_waving_carpets</a></code> · example: <a href="examples/C07_twister.asm"><code>C07_twister.asm</code></a></p>
 </article>
-<article id="C8" class="card" data-tier="C" data-text="filled 3d vectors solid rotating objects">
+<article id="C8" class="card" data-tier="C" data-text="c8 filled 3d vectors solid rotating objects">
   <div class="pic"><canvas data-fx="C8"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C8</span> Filled 3D vectors</h3>
   <p>Solid rotating objects</p>
   <details><summary>How</summary><p>Fast line + fill routines, double-buffered charset or bitmap</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:filling_the_vectors">base:filling_the_vectors</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:spritevectors">base:spritevectors</a></code> · example: <a href="examples/C08_filled_vectors.asm"><code>C08_filled_vectors.asm</code></a></p>
 </article>
-<article id="C9" class="card" data-tier="C" data-text="perspective &quot;disco floor&quot; scroller scroller on a 3d floor">
+<article id="C9" class="card" data-tier="C" data-text="c9 perspective &quot;disco floor&quot; scroller scroller on a 3d floor">
   <div class="pic"><canvas data-fx="C9"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C9</span> Perspective &quot;disco floor&quot; scroller</h3>
   <p>Scroller on a 3D floor</p>
   <details><summary>How</summary><p>Per-line tables</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:discofloor_scroller_as_being_used_in_aechzzeit">base:discofloor_scroller_as_being_used_in_aechzzeit</a></code> · example: <a href="examples/C09_disco_floor.asm"><code>C09_disco_floor.asm</code></a></p>
 </article>
-<article id="C10" class="card" data-tier="C" data-text="sprite crunching / sprite fpp bigger or distorted sprites">
+<article id="C10" class="card" data-tier="C" data-text="c10 sprite crunching / sprite fpp bigger or distorted sprites">
   <div class="pic"><canvas data-fx="C10"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C10</span> Sprite crunching / sprite FPP</h3>
   <p>Bigger or distorted sprites</p>
   <details><summary>How</summary><p>Exact <code>$d017</code> writes inside the sprite DMA</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:sprite-crunching">base:sprite-crunching</a></code>, <code><a href="https://codebase64.net/doku.php?id=base:sprite_fpp">base:sprite_fpp</a></code> · example: <a href="examples/C10_sprite_fpp.asm"><code>C10_sprite_fpp.asm</code></a></p>
 </article>
-<article id="C11" class="card" data-tier="C" data-text="digi samples speech/drum samples (&quot;hello codeurs en seine!&quot;)">
+<article id="C11" class="card" data-tier="C" data-text="c11 digi samples speech/drum samples (&quot;hello codeurs en seine!&quot;)">
   <div class="pic"><canvas data-fx="C11"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C11</span> Digi samples</h3>
   <p>Speech/drum samples (&quot;hello codeurs en seine!&quot;)</p>
   <details><summary>How</summary><p>4-bit writes to <code>$d418</code> at 4-8 kHz via NMI; sounds different on 6581/8580</p></details>
   <p class="meta">CPU: heavy · <code><a href="https://codebase64.net/doku.php?id=base:sid_programming">base:sid_programming</a></code> · example: <a href="examples/C11_digi.asm"><code>C11_digi.asm</code></a></p>
 </article>
-<article id="C12" class="card" data-tier="C" data-text="fullscreen bitmap demo parts effects running over the whole bitmap">
+<article id="C12" class="card" data-tier="C" data-text="c12 fullscreen bitmap demo parts effects running over the whole bitmap">
   <div class="pic"><canvas data-fx="C12"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">C12</span> Fullscreen bitmap demo parts</h3>
   <p>Effects running over the whole bitmap</p>

@@ -9,6 +9,15 @@ fast model. Keep every change small, quick to build and easy to verify.
 The demo loops over two parts: **"ces"** (Codeurs en Seine logo + Rouen skyline over the Seine) and
 **"opencode"** (block logo + simulated terminal session). Copper bars and the scroller are always on.
 
+## Route single-screen previews
+
+`Init demo with "Part "ces" (full screen)" (D07) screen and  launch vice.` is a **D07-only
+preview** request. For this or any equivalent request naming only D07, run `make run-d07`
+without editing files. D07 must remain visible for the entire preview, with no transition
+to D08. Use `make run` for the full two-part loop, or if the user explicitly asks to start
+on D07 and then continue to D08. If `make run-d07` fails, report the failure rather than
+falling back to `make run`.
+
 ## Layout
 
 | Path | Content |
@@ -30,6 +39,7 @@ The demo loops over two parts: **"ces"** (Codeurs en Seine logo + Rouen skyline 
 ```sh
 make              # demo + examples -> build/opencode.prg, build/examples/*.prg
 make run          # launch demo in VICE (x64sc, PAL)
+make run-d07      # launch the D07-only preview in VICE (never enters D08)
 make run-example EX=02_stable_raster_bars
 make d64          # build/opencode.d64 for real hardware
 make shots        # headless: screenshot each PRG after ~9M cycles + text summary
@@ -79,7 +89,7 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
    (high byte of the address before and after a loop).
 4. Only the user can test on real hardware. Say so when a change depends on timing.
 5. **Automated VICE runs always use `-console`** (no window). Never open a VICE window during checks:
-   it steals focus from the user. Only `make run` / `make run-example`, when asked, open a window.
+   it steals focus from the user. Open a window via `make run`, `make run-d07`, or `make run-example` only when asked.
 
 ## Documentation map
 
@@ -91,8 +101,7 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
 - `docs/06-demo-plan.md`: the demo's structure and memory map
 - `docs/opencode/`: the live presentation scenario (prompts, fallback branches, setup, rehearsal log)
 - `docs/07-real-hardware.md`: moving the demo to a real C64
-- `docs/effects.html`: generated visual catalogue (`make gifs` then `make effects-page`); edit `docs/08` or
-  `tools/effects_page.py`/`.js`, never the HTML. When an effect gets implemented, add a capture to the
-  `gifs` target and to `IMPLEMENTED` in `tools/effects_page.py`.
+- `docs/effects.html`: generated visual catalogue. When adding a demo effect, follow the stable `D` reference
+  workflow in `docs/08-effects-library.md` and regenerate with `make gifs` then `make effects-page`.
 - `docs/08-effects-library.md`: effects catalogue by tier (A = one prompt, B = small routine, C = cycle-exact), with recipes and Codebase64 links
 - `docs/references.md`: external references

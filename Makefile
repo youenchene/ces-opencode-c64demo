@@ -16,17 +16,19 @@ BUILD     := build
 ACMEFLAGS := -I include -f cbm --cpu 6502
 
 DEMO      := $(BUILD)/opencode.prg
+DEMO_D07  := $(BUILD)/opencode-d07.prg
 D64       := $(BUILD)/opencode.d64
 EXAMPLES  := $(patsubst docs/examples/%.asm,$(BUILD)/examples/%.prg,$(wildcard docs/examples/*.asm))
 
-.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-example packed shots clean
+.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-d07 run-example packed shots clean
 
 all: demo examples
 
 demo: $(DEMO)
 
-$(DEMO): src/main.asm include/c64.asm $(wildcard src/gfx/*.asm) $(wildcard src/music/*.sid) | $(BUILD)
-	$(ACME) $(ACMEFLAGS) -DMUSIC=$(MUSIC) -DTIMING=$(TIMING) -l $(BUILD)/opencode.sym -r $(BUILD)/opencode.lst -o $@ $<
+$(DEMO_D07): DEMO_D07_ONLY = 1
+$(DEMO) $(DEMO_D07): src/main.asm include/c64.asm $(wildcard src/gfx/*.asm) $(wildcard src/music/*.sid) | $(BUILD)
+	$(ACME) $(ACMEFLAGS) -DMUSIC=$(MUSIC) -DTIMING=$(TIMING) -DDEMO_D07_ONLY=$(or $(DEMO_D07_ONLY),0) -l $(@:.prg=.sym) -r $(@:.prg=.lst) -o $@ $<
 
 examples: $(EXAMPLES)
 
@@ -53,6 +55,10 @@ packed: $(DEMO)
 
 run: $(DEMO)
 	$(X64) -pal -sidmodel $(SIDMODEL) -autostart $(DEMO)
+
+# Preview D07 indefinitely, with no transition to D08.
+run-d07: $(DEMO_D07)
+	$(X64) -pal -sidmodel $(SIDMODEL) -autostart $(DEMO_D07)
 
 # make run-example EX=02_stable_raster_bars
 run-example: examples

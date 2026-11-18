@@ -11,27 +11,30 @@ Made for **Codeurs en Seine 2026**: Rouen, Kindarena, 19 November 2026 (https://
 
 The copper bars and the scroller run in both parts. Switching parts clears rows 0-23 and redraws in one go
 (about one frame of tearing).
+`make run-d07` builds and launches a preview that stays on the `ces` part instead of switching.
 
-### Part "ces"
+The `D` references below match the [effect library](08-effects-library.md#in-the-demo--stable-references).
+
+### Part "ces" (D07)
 
 ```
-raster $12-$31  ████ copper bars (top border)
-rows  1-11      Codeurs en Seine logo, 22x11 cells, charset A (106 tiles), white shine sweeping across
+raster $12-$31  D01 copper bars (top border)
+rows  1-11      D03 Codeurs en Seine logo, 22x11 cells, charset A (106 tiles), white shine sweeping across
 row  12         rouen * kindarena * 19.11.2026
 row  13         (empty: charset A -> B switch happens here)
-rows 14-22      Rouen skyline, charset B: pont Gustave-Flaubert, half-timbered houses,
+rows 14-22      D04 Rouen skyline, charset B: pont Gustave-Flaubert, half-timbered houses,
                 cathedrale Notre-Dame (spire, Tour Saint-Romain, Tour de Beurre), abbatiale Saint-Ouen
-row  23         the Seine: quay + waves, colour-cycled (water_colors)
-row  24         smooth scroller
+row  23         D04 the Seine: quay + waves, colour-cycled (water_colors)
+row  24         D02 smooth scroller
 ```
 
-### Part "opencode"
+### Part "opencode" (D08)
 
 ```
-rows  1-5       ### ### ### ##  ### ### ##  ###   "OPENCODE" block logo, rainbow sweep
+rows  1-5       D05 "OPENCODE" block logo, rainbow sweep
 row   7         the open source AI coding agent
-rows  9-21      $ opencode / > what are you? ...  typer: simulated terminal session
-row  24         smooth scroller
+rows  9-21      D06 typer: simulated terminal session ($ opencode / > what are you? ...)
+row  24         D02 smooth scroller
 ```
 
 ## IRQ chain (one frame)
