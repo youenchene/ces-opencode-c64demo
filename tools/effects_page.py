@@ -46,6 +46,8 @@ IMPLEMENTED = [
      "The scroller technique on its own.", "docs/examples/03_smooth_scroller.asm"),
     ("ex-sprites-sine.gif", "Example 04: sprites on sine tables",
      "8 hardware sprites following sine tables generated at assemble time, X MSB handling.", "docs/examples/04_sprites_sine.asm"),
+    ("ex-heads.gif", "Example B30: bouncing portrait sprites",
+     "Two portrait cutouts spin like wheels and bounce off the screen edges. Standalone example.", "docs/examples/B30_rotating_heads.asm"),
 ]
 
 TIERS = {
@@ -86,9 +88,10 @@ def parse_library():
 
 
 def card_impl(gif, name, desc, where):
+    tag = "standalone example" if gif == "ex-heads.gif" else "in the demo"
     return f"""<article class="card done">
   <div class="pic"><img src="img/effects/{gif}" alt="{html.escape(name)}" loading="lazy"></div>
-  <h3>{html.escape(name)} <span class="tag ok">in the demo</span></h3>
+  <h3>{html.escape(name)} <span class="tag ok">{tag}</span></h3>
   <p>{md_inline(desc)}</p>
   <p class="meta">Code: {md_inline('`' + where + '`')} · capture: real VICE (PAL)</p>
 </article>"""

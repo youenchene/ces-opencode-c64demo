@@ -81,6 +81,7 @@ Columns: **CPU** is a rough per-frame cost (PAL frame = 19,656 cycles; our curre
 | B27 | Animated sprite logo | Big multicolour logo built from sprites | 8 sprites expanded side by side, colours cycled | ~0.2k | `cb:base:spriteintro` |
 | B28 | Part sequencer | Many parts with timed transitions | Table `(frames, init, frame)` (see 04, "Parts") | ~0 | `main_loop` |
 | B29 | Music sync | Flashes and bounces hit the beat | Beat table of frame numbers, or read voice 3 envelope `$d41c` if the tune uses voice 3 for drums | ~0 | `irq_bottom` |
+| B30 | Bouncing portrait sprites | Two cut-out portraits spin like wheels and bounce off the screen edges | Swap sprite pointers through 16 precalculated poses and reverse velocity at the edges | ~1k | `tools/faces2sprites.py` |
 
 ## Tier C — cycle-exact / heavy (prepare off-stage)
 

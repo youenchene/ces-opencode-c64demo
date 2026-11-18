@@ -82,6 +82,7 @@ C01, C03, C05, C10, C12 (C05 has a known glitch at the top of the screen).
 | [`B27_sprite_logo.asm`](examples/B27_sprite_logo.asm) | Animated sprite logo |  |
 | [`B28_part_sequencer.asm`](examples/B28_part_sequencer.asm) | Part sequencer | yes |
 | [`B29_music_sync.asm`](examples/B29_music_sync.asm) | Music sync | yes |
+| [`B30_rotating_heads.asm`](examples/B30_rotating_heads.asm) | Bouncing portrait sprites | yes |
 | [`C01_side_border.asm`](examples/C01_side_border.asm) | Side-border opening (with sprites in the border) | yes |
 | [`C02_tech_tech.asm`](examples/C02_tech_tech.asm) | Tech-tech | yes |
 | [`C03_dysp.asm`](examples/C03_dysp.asm) | DYSP (Different Y Sprite Positions) in the open side border | yes |

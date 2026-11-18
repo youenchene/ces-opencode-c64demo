@@ -34,11 +34,14 @@ $(BUILD)/examples/%.prg: docs/examples/%.asm include/c64.asm | $(BUILD)
 	@mkdir -p $(BUILD)/examples
 	$(ACME) $(ACMEFLAGS) -l $(@:.prg=.sym) -o $@ $<
 
+$(BUILD)/examples/B30_rotating_heads.prg: src/gfx/heads.sprites.asm
+
 # Regenerate charset graphics from assets/ (needs rsvg-convert for SVG: brew install librsvg).
 # The generated src/gfx/*.asm are committed, so a normal build doesn't need this.
 gfx:
 	python3 tools/img2chars.py ces_logo assets/codeurs-en-seine-logo.svg --svg-width 210 --crop --optimize
 	python3 tools/img2chars.py rouen assets/rouen.txt
+	python3 tools/faces2sprites.py
 
 # Disk image for SD2IEC / Kung Fu Flash / 1541 Ultimate / real 1541
 d64: $(DEMO)
@@ -84,6 +87,7 @@ gifs: all
 	$(CAP) $(BUILD)/examples/02_stable_raster_bars.prg $(GIFS)/ex-stable-bars.gif --start 6000000 --frames 32 --step 2 --scale 2
 	$(CAP) $(BUILD)/examples/03_smooth_scroller.prg $(GIFS)/ex-scroller.gif --start 6000000 --frames 32 --step 1 --crop 0,220,384,22
 	$(CAP) $(BUILD)/examples/04_sprites_sine.prg $(GIFS)/ex-sprites-sine.gif --start 6000000 --frames 32 --step 1 --scale 2
+	$(CAP) $(BUILD)/examples/B30_rotating_heads.prg $(GIFS)/ex-heads.gif --start 9000000 --frames 96 --step 3
 
 # Smoke test: every example draws something and animates (results in build/check/)
 check-examples: examples

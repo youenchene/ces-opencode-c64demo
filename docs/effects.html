@@ -39,7 +39,7 @@ footer{padding:16px 24px;background:#000;font-size:12px}
 <body>
 <header>
   <h1>**** OPENCODE C64 — DEMO EFFECTS ****</h1>
-  <p>71 effects for the Codeurs en Seine 2026 demo. Green cards run in the demo today (real captures);
+  <p>73 effects for the Codeurs en Seine 2026 demo. Green cards run in the demo today (real captures);
   the rest is the library from <code>docs/08-effects-library.md</code>, previewed as browser simulations.</p>
 </header>
 <nav>
@@ -47,7 +47,7 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <input id="q" placeholder="search (plasma, sprite, border...)">
 </nav>
 <main>
-<section id="done"><h2>In the demo now (13)</h2><p class="lead">Animated captures of the real program running in VICE (<code>make gifs</code>).</p><div class="grid"><article class="card done">
+<section id="done"><h2>In the demo now (14)</h2><p class="lead">Animated captures of the real program running in VICE (<code>make gifs</code>).</p><div class="grid"><article class="card done">
   <div class="pic"><img src="img/effects/demo-ces.gif" alt="Part &quot;ces&quot; (full screen)" loading="lazy"></div>
   <h3>Part &quot;ces&quot; (full screen) <span class="tag ok">in the demo</span></h3>
   <p>Codeurs en Seine logo, date line, Rouen skyline over the Seine, copper bars and scroller.</p>
@@ -124,6 +124,12 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <h3>Example 04: sprites on sine tables <span class="tag ok">in the demo</span></h3>
   <p>8 hardware sprites following sine tables generated at assemble time, X MSB handling.</p>
   <p class="meta">Code: <code>docs/examples/04_sprites_sine.asm</code> · capture: real VICE (PAL)</p>
+</article>
+<article class="card done">
+  <div class="pic"><img src="img/effects/ex-heads.gif" alt="Example B30: bouncing portrait sprites" loading="lazy"></div>
+  <h3>Example B30: bouncing portrait sprites <span class="tag ok">standalone example</span></h3>
+  <p>Two portrait cutouts spin like wheels and bounce off the screen edges. Standalone example.</p>
+  <p class="meta">Code: <code>docs/examples/B30_rotating_heads.asm</code> · capture: real VICE (PAL)</p>
 </article></div></section>
 <section id="tierA" class="tier"><h2>Tier A — one-prompt effects (17)</h2><p class="lead">Data or colour-RAM change only; safe to do live on stage. Previews are browser simulations in the C64 palette, not C64 code.</p><div class="grid"><article class="card" data-tier="A" data-text="copper colour schemes bars change palette (fire, ice, rainbow, rouen red &amp; gold)">
   <div class="pic"><canvas data-fx="A1"></canvas><span class="sim">simulation</span></div>
@@ -244,7 +250,7 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <details><summary>How</summary><p>Text table + A10 wipe every N seconds</p></details>
   <p class="meta">CPU: small · new mini-part · example: <a href="examples/A17_greetings.asm"><code>A17_greetings.asm</code></a></p>
 </article></div></section>
-<section id="tierB" class="tier"><h2>Tier B — small routines (29)</h2><p class="lead">New routine or jitter-tolerant raster IRQ; prepare beforehand. Previews are browser simulations in the C64 palette, not C64 code.</p><div class="grid"><article class="card" data-tier="B" data-text="2x2 scroller big scroller, letters 2 chars wide/high">
+<section id="tierB" class="tier"><h2>Tier B — small routines (30)</h2><p class="lead">New routine or jitter-tolerant raster IRQ; prepare beforehand. Previews are browser simulations in the C64 palette, not C64 code.</p><div class="grid"><article class="card" data-tier="B" data-text="2x2 scroller big scroller, letters 2 chars wide/high">
   <div class="pic"><canvas data-fx="B1"></canvas><span class="sim">simulation</span></div>
   <h3><span class="id">B1</span> 2x2 scroller</h3>
   <p>Big scroller, letters 2 chars wide/high</p>
@@ -446,6 +452,13 @@ footer{padding:16px 24px;background:#000;font-size:12px}
   <p>Flashes and bounces hit the beat</p>
   <details><summary>How</summary><p>Beat table of frame numbers, or read voice 3 envelope <code>$d41c</code> if the tune uses voice 3 for drums</p></details>
   <p class="meta">CPU: ~0 · <code>irq_bottom</code> · example: <a href="examples/B29_music_sync.asm"><code>B29_music_sync.asm</code></a></p>
+</article>
+<article class="card" data-tier="B" data-text="bouncing portrait sprites two cut-out portraits spin like wheels and bounce off the screen edges">
+  <div class="pic"><canvas data-fx="B30"></canvas><span class="sim">simulation</span></div>
+  <h3><span class="id">B30</span> Bouncing portrait sprites</h3>
+  <p>Two cut-out portraits spin like wheels and bounce off the screen edges</p>
+  <details><summary>How</summary><p>Swap sprite pointers through 16 precalculated poses and reverse velocity at the edges</p></details>
+  <p class="meta">CPU: ~1k · <code>tools/faces2sprites.py</code> · example: <a href="examples/B30_rotating_heads.asm"><code>B30_rotating_heads.asm</code></a></p>
 </article></div></section>
 <section id="tierC" class="tier"><h2>Tier C — cycle-exact / heavy (12)</h2><p class="lead">Stable raster on every line, big tables; prepare off-stage, test on hardware. Previews are browser simulations in the C64 palette, not C64 code.</p><div class="grid"><article class="card" data-tier="C" data-text="side-border opening graphics/sprites across the full width">
   <div class="pic"><canvas data-fx="C1"></canvas><span class="sim">simulation</span></div>
