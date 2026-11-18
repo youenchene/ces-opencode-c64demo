@@ -118,7 +118,14 @@ the switch inside a text-only row hides the IRQ jitter completely: no stable ras
   frame or use a smaller area.
 - Char-based rotozoomer / tunnel: precalculated lookup tables, charset with 8 or 16 shades.
 
+## Bouncing portrait sprites ✅
+
+`docs/examples/B30_rotating_heads.asm` uses four double-size hires sprites per
+cutout portrait. Sprite pointer swaps play 16 in-plane rotation poses, one every
+four PAL frames. Each portrait moves every frame and reverses at the display edges.
+
 ## Bitmap effects 📝
+
 
 Hi-res (320×200) or multicolour bitmap (160×200, 4 colours per 4×8 cell): `$d011` bit 5, `$d018` bit 3,
 plus a 9 KB bitmap and screen. Good for a static opencode logo picture converted with a tool (for example
