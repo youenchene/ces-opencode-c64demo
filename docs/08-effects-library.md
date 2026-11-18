@@ -18,10 +18,9 @@ Link format: `cb:base:fld` means `https://codebase64.net/doku.php?id=base:fld`.
 Use the `D` IDs in issue reports and live prompts for effects and full-screen parts that already run
 in `src/main.asm`. Use the A/B/C IDs below for recipes and variants. To add a demo effect, give it the
 next unused `D` ID here and in its source comment, add a `make gifs` capture, then run `make effects-page`.
-Don't renumber or reuse IDs.
+Don't renumber or reuse IDs. The next unused ID is `D09`.
 
-To preview just **D07**, run `make run-d07`. It starts on D07 and stays there, with the copper bars
-and scroller still running. `make run` starts on D07 too, but switches to D08 after nine seconds.
+Run `make run` to launch **D07**, the only screen, with the copper bars and scroller running.
 
 | ID (preview) | Effect or part | What you see | Code in `src/main.asm` | Capture |
 |---|---|---|---|---|
@@ -29,10 +28,7 @@ and scroller still running. `make run` starts on D07 too, but switches to D08 af
 | [D02](effects.html#D02) | 1x1 smooth scroller | The bottom text row scrolls left while the rest of the screen stays still. | `irq_split`, `scroller_update` | `scroller.gif` |
 | [D03](effects.html#D03) | Charset logo + shine sweep | A white glint crosses the Codeurs en Seine logo. | `part_ces`, `ces_shine` | `ces-shine.gif` |
 | [D04](effects.html#D04) | Charset split + water shimmer | A second charset shows the Rouen skyline while blue tones cycle across the Seine. | `irq_mid`, `water_colors` | `rouen-seine.gif` |
-| [D05](effects.html#D05) | Colour-cycled block logo | A diagonal rainbow sweeps across the opencode logo. | `draw_logo`, `logo_colors` | `logo-rainbow.gif` |
-| [D06](effects.html#D06) | Terminal typer | A simulated terminal session prints character by character with a blinking cursor. | `typer_update` | `typer.gif` |
 | [D07](effects.html#D07) | Part "ces" (full screen) | Codeurs en Seine logo and date above the Rouen skyline, with copper bars and scroller. | `part_ces`, `ces_update` | `demo-ces.gif` |
-| [D08](effects.html#D08) | Part "opencode" (full screen) | Block logo, subtitle and simulated terminal session, with copper bars and scroller. | `part_opencode` | `demo-opencode.gif` |
 
 ## How to read the tiers
 
@@ -61,12 +57,12 @@ Columns: **CPU** is a rough per-frame cost (PAL frame = 19,656 cycles; our curre
 | A8 | Border / background flash | Screen flashes on a beat | Set `$d020`/`$d021` to white, decay through a fade table over 6-8 frames. Trigger from a frame counter (beat table) | ~50 | `irq_bottom` |
 | A9 | Fade in / out | Smooth transitions between parts | Fade tables `fade[c]` → darker colour, applied to colour RAM over 8-16 frames (Veto's colour ramps: `cb:vic`) | ~4k while fading | part switch |
 | A10 | Text reveal / wipe | Text appears column by column, or randomly | Colour RAM starts black; per frame, set N cells to their real colour (column order or a random-permutation table) | small | part init |
-| A11 | Typewriter tweaks | Different speed, colours, extra lines | `TYPE_SPEED`, `typer_text` control bytes | 0 | `typer_text` |
+| A11 | Typewriter tweaks | Different speed, colours, extra lines | Adjust the print delay and text stream | 0 | standalone example |
 | A12 | Char animation | Waves, blinking windows, a waving flag | Rewrite 8 bytes of one charset char per frame (e.g. ROL the water char bytes) | ~100 | `rouen` charset B |
 | A13 | Twinkling windows / stars | Skyline windows and stars flicker | Random colour-RAM cell from a table set to yellow, another to dark, each frame | ~100 | `ces_update` |
 | A14 | Glitch / noise burst | Short "signal lost" moment | For 5-10 frames: random `$d016` xscroll and `$d020` per frame, garbage colours on a few rows | small | part switch |
 | A15 | Screen shake | Whole screen jolts on a beat | Change `$d011` YSCROLL bits (keep bit 4 and bit 3) for a few frames; clamp to 0-7 | 0 | `irq_bottom` |
-| A16 | Logo colour themes | Opencode logo in brand colours | Edit `logo_gradient` / `shine_gradient` | 0 | data |
+| A16 | Logo colour themes | A logo in brand colours | Edit the palette or the demo's `shine_gradient` | 0 | data |
 | A17 | Greetings list | Rotating group/sponsor names | Text table + A10 wipe every N seconds | small | new mini-part |
 
 ## Tier B — small routines, jitter-tolerant
@@ -137,7 +133,7 @@ Run it with `make run-example EX=B30_rotating_heads`. See the
 1. **A3 sine-moving bars + A8 beat flash + B29 music sync**: instantly "demoscene", almost free.
 2. **B17 open top/bottom border** with **B5 waving sprite letters** spelling `OPENCODE` in the border.
 3. **B10 DYCP** for the scroller: the classic look, and it shows what "6502 by an AI agent" means.
-4. **A9 fades + A14 glitch** between the "ces" and "opencode" parts (they're cut at the moment).
+4. **A9 fades + A14 glitch** as an intro transition into the "ces" screen.
 5. **B11 plasma** or **B13 fire** as a third short part.
 6. **A12/A13** on the Rouen skyline: flowing Seine chars, lit windows.
 

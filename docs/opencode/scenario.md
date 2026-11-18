@@ -71,9 +71,9 @@ The real C64 runs the pre-built demo (Kung Fu Flash): Codeurs en Seine logo, Rou
 | | |
 |---|---|
 | Do | Show the context gauge in the sidebar after five acts. `<leader>c` to **compact**. Show the summary (objective, decisions, files). |
-| Prompt | `Continue: add the typer line "> can you run on a C64?" answered "  you're looking at it."` |
-| Expected | Works right after compaction: the summary kept what matters (`typer_text`, control bytes, 13-row limit). |
-| Show | Context gauge dropped; `make run`, wait for the opencode part. |
+| Prompt | `Continue: append "you're looking at a real C64!" to the scroller.` |
+| Expected | Works right after compaction: the summary kept the scroller's file, text encoding and terminator. |
+| Show | Context gauge dropped; `make run`, watch for the new scroller text. |
 | Fallback | `stage/step-6` |
 
 ## Act 7 — Something bigger, prepared (2 min)

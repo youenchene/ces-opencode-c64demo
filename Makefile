@@ -16,19 +16,17 @@ BUILD     := build
 ACMEFLAGS := -I include -f cbm --cpu 6502
 
 DEMO      := $(BUILD)/opencode.prg
-DEMO_D07  := $(BUILD)/opencode-d07.prg
 D64       := $(BUILD)/opencode.d64
 EXAMPLES  := $(patsubst docs/examples/%.asm,$(BUILD)/examples/%.prg,$(wildcard docs/examples/*.asm))
 
-.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-d07 run-example packed shots clean
+.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-example packed shots clean
 
 all: demo examples
 
 demo: $(DEMO)
 
-$(DEMO_D07): DEMO_D07_ONLY = 1
-$(DEMO) $(DEMO_D07): src/main.asm include/c64.asm $(wildcard src/gfx/*.asm) $(wildcard src/music/*.sid) | $(BUILD)
-	$(ACME) $(ACMEFLAGS) -DMUSIC=$(MUSIC) -DTIMING=$(TIMING) -DDEMO_D07_ONLY=$(or $(DEMO_D07_ONLY),0) -l $(@:.prg=.sym) -r $(@:.prg=.lst) -o $@ $<
+$(DEMO): src/main.asm include/c64.asm $(wildcard src/gfx/*.asm) $(wildcard src/music/*.sid) | $(BUILD)
+	$(ACME) $(ACMEFLAGS) -DMUSIC=$(MUSIC) -DTIMING=$(TIMING) -l $(BUILD)/opencode.sym -r $(BUILD)/opencode.lst -o $@ $<
 
 examples: $(EXAMPLES)
 
@@ -56,10 +54,6 @@ packed: $(DEMO)
 run: $(DEMO)
 	$(X64) -pal -sidmodel $(SIDMODEL) -autostart $(DEMO)
 
-# Preview D07 indefinitely, with no transition to D08.
-run-d07: $(DEMO_D07)
-	$(X64) -pal -sidmodel $(SIDMODEL) -autostart $(DEMO_D07)
-
 # make run-example EX=02_stable_raster_bars
 run-example: examples
 	$(X64) -pal -autostart $(BUILD)/examples/$(EX).prg
@@ -81,13 +75,10 @@ GIFS := docs/img/effects
 gifs: all
 	@mkdir -p $(GIFS)
 	$(CAP) $(DEMO) $(GIFS)/demo-ces.gif        --start 6000000  --frames 24 --step 2 --scale 2
-	$(CAP) $(DEMO) $(GIFS)/demo-opencode.gif   --start 30000000 --frames 24 --step 4 --scale 2
 	$(CAP) $(DEMO) $(GIFS)/copper-bars.gif     --start 6000000  --frames 32 --step 1 --crop 0,0,384,40
 	$(CAP) $(DEMO) $(GIFS)/scroller.gif        --start 6000000  --frames 32 --step 1 --crop 0,220,384,22
 	$(CAP) $(DEMO) $(GIFS)/ces-shine.gif       --start 6000000  --frames 32 --step 2 --crop 32,40,320,100
 	$(CAP) $(DEMO) $(GIFS)/rouen-seine.gif     --start 6000000  --frames 16 --step 2 --crop 32,145,320,84
-	$(CAP) $(DEMO) $(GIFS)/logo-rainbow.gif    --start 30000000 --frames 32 --step 1 --crop 32,40,320,46
-	$(CAP) $(DEMO) $(GIFS)/typer.gif           --start 12500000 --frames 48 --step 8 --crop 32,85,320,130
 	$(CAP) $(BUILD)/examples/00_hello.prg $(GIFS)/ex-hello.gif --start 6000000 --frames 16 --step 4 --scale 2
 	$(CAP) $(BUILD)/examples/01_raster_irq.prg $(GIFS)/ex-raster-irq.gif --start 6000000 --frames 1 --scale 2
 	$(CAP) $(BUILD)/examples/02_stable_raster_bars.prg $(GIFS)/ex-stable-bars.gif --start 6000000 --frames 32 --step 2 --scale 2

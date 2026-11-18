@@ -10,7 +10,7 @@ Rule of thumb: an act stays live only if it is ≤ 30 s (≤ 60 s for Act 3) and
 | | | 3 | subagents + beat flash | | | |
 | | | 4 | fork + red/gold sine bars | | | |
 | | | 5 | MCP browser preview | | | |
-| | | 6 | compaction + typer line | | | |
+| | | 6 | compaction + scroller text | | | |
 
 ## To verify in rehearsal
 
