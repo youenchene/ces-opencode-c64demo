@@ -56,11 +56,11 @@ run-example: examples
 	$(X64) -pal -autostart $(BUILD)/examples/$(EX).prg
 
 # Headless check: run every PRG ~9M cycles in warp, save screenshot, print summary.
-# Exit code 1 from x64sc is expected (-limitcycles).
+# -console: no window, so headless runs never take focus. Exit code 1 is expected (-limitcycles).
 shots: all
 	@mkdir -p $(BUILD)/shots
 	@for p in $(DEMO) $(EXAMPLES); do n=$$(basename $$p .prg); \
-	  $(X64) -pal -default -warp -autostartprgmode 1 -limitcycles 9000000 \
+	  $(X64) -console -pal -default +sound -warp -autostartprgmode 1 -limitcycles 9000000 \
 	    -exitscreenshot $(BUILD)/shots/$$n.png -autostart $$p >/dev/null 2>&1; \
 	  echo "shot: $(BUILD)/shots/$$n.png"; done
 	python3 tools/pngsum.py $(BUILD)/shots/*.png

@@ -74,10 +74,12 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
    - raster bars: one colour per line (`fg=0` on bar lines), nothing changing partway through a line;
    - text rows (y = 35 + row*8) have `fg>0` where text should appear.
    - `make shots` shows the "ces" part (~9M cycles). To see the "opencode" part, take a shot at
-     ~30M cycles: `x64sc -pal -default -warp -autostartprgmode 1 -limitcycles 30000000 -exitscreenshot build/shots/oc.png -autostart build/opencode.prg`.
+     ~30M cycles: `x64sc -console -pal -default +sound -warp -autostartprgmode 1 -limitcycles 30000000 -exitscreenshot build/shots/oc.png -autostart build/opencode.prg`.
 3. Timing-sensitive changes: check `build/opencode.lst` for page crossings
    (high byte of the address before and after a loop).
 4. Only the user can test on real hardware. Say so when a change depends on timing.
+5. **Automated VICE runs always use `-console`** (no window). Never open a VICE window during checks:
+   it steals focus from the user. Only `make run` / `make run-example`, when asked, open a window.
 
 ## Documentation map
 

@@ -54,10 +54,14 @@ Don't use `-Wtype-mismatch`: the shared macros use plain numbers as addresses an
 ```sh
 x64sc -pal -autostart build/opencode.prg          # normal run
 x64sc -pal -warp -autostart ...                   # warp mode
-x64sc -pal -default -warp -autostartprgmode 1 \
+x64sc -console -pal -default +sound -warp -autostartprgmode 1 \
       -limitcycles 9000000 -exitscreenshot out.png -autostart prg   # headless screenshot (exit code 1 is normal)
 x64sc -moncommands build/opencode.sym ...          # load labels into the monitor
 ```
+
+**Always use `-console` for automated runs** (screenshots, GIFs, WAV recordings): it opens no window, so
+VICE never steals focus from the person working on the machine. Screenshots and `-sounddev wav` still work.
+Only `make run` / `make run-example` should open a window.
 
 - `-autostartprgmode 1` injects the PRG into RAM (fast, no drive emulation).
 - Monitor: `Alt+H` (or `Cmd+H` on macOS). Useful commands: `r` (registers), `m 0400` (memory dump),

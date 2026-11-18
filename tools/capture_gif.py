@@ -135,7 +135,7 @@ def main():
 
     tmp = tempfile.mkdtemp(prefix="capgif")
     shots = [os.path.join(tmp, f"f{i:03d}.png") for i in range(a.frames)]
-    cmds = [[a.x64, "-pal", "-default", "+sound", "-warp", "+autostart-delay-random",
+    cmds = [[a.x64, "-console", "-pal", "-default", "+sound", "-warp", "+autostart-delay-random",
              "-autostartprgmode", "1", "-limitcycles", str(a.start + i * a.step * PAL_FRAME),
              "-exitscreenshot", s, "-autostart", a.prg] for i, s in enumerate(shots)]
     for i in range(0, len(cmds), a.jobs):

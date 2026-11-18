@@ -11,7 +11,7 @@ mkdir -p $O
 for p in build/examples/*.prg; do
   b=$(basename $p .prg)
   for c in 9000000 9393120; do
-    x64sc -pal -default +sound -warp -autostartprgmode 1 -limitcycles $c \
+    x64sc -console -pal -default +sound -warp -autostartprgmode 1 -limitcycles $c \
       -exitscreenshot $O/${b}_$c.png -autostart $p >/dev/null 2>&1 &
   done
   while [ $(jobs -r | wc -l) -ge 10 ]; do sleep 0.2; done
