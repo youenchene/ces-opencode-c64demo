@@ -22,6 +22,16 @@ Don't renumber or reuse IDs. The next unused ID is `D09`.
 
 Run `make run` to launch **D07**, the only screen, with the copper bars and scroller running.
 
+### Live preview and safe tweaks
+
+Use `make check-part PART=ces` for two headless captures, then `make run PART=ces`
+to open D07 in VICE. Preview builds go under `build/preview/` and never replace
+`build/opencode.prg`. Run `make shots` for the full rehearsal and regenerate GIFs
+when updating the catalogue.
+
+D07 live tweaks: bar and shimmer palettes, shine colour, date and scroller text.
+Keep VIC bank assignments, raster timings, and buffer sizes fixed during live edits.
+
 | ID (preview) | Effect or part | What you see | Code in `src/main.asm` | Capture |
 |---|---|---|---|---|
 | [D01](effects.html#D01) | Stable raster copper bars | Colour gradients roll through the top border, one colour per raster line. | `irq_bars1`, `irq_bars2`, `rotate_bars` | `copper-bars.gif` |

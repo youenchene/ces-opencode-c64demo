@@ -9,10 +9,10 @@ fast model. Keep every change small, quick to build and easy to verify.
 The demo shows one screen, **"ces" (D07)**: Codeurs en Seine logo and Rouen skyline over the Seine.
 Copper bars and the scroller are always on.
 
-## Route single-screen previews
+## Preview a part
 
 `Init demo with "Part "ces" (full screen)" (D07) screen and  launch vice.` is a preview request.
-Run `make run` without editing files. D07 is the only screen and stays visible throughout.
+Run `make run PART=ces` without editing files. Use plain `make run` for the stage build.
 
 ## Layout
 
@@ -35,6 +35,8 @@ Run `make run` without editing files. D07 is the only screen and stays visible t
 ```sh
 make              # demo + examples -> build/opencode.prg, build/examples/*.prg
 make run          # launch demo in VICE (x64sc, PAL)
+make run PART=ces        # open D07 in VICE (separate preview build)
+make check-part PART=ces # two headless captures, no other examples
 make run-example EX=02_stable_raster_bars
 make d64          # build/opencode.d64 for real hardware
 make shots        # headless: screenshot each PRG after ~9M cycles + text summary
@@ -74,10 +76,8 @@ optionally `rsvg-convert` (`brew install librsvg`). Details: `docs/01-toolchain.
 ## Checking a change (do this every time)
 
 1. `make` must finish with no errors or warnings.
-2. `make shots`, then read the `tools/pngsum.py` output (or open `build/shots/*.png`):
-   - raster bars: one colour per line (`fg=0` on bar lines), nothing changing partway through a line;
-   - text rows (y = 35 + row*8) have `fg>0` where text should appear.
-   - The demo screenshot shows D07 (~9M cycles).
+2. Run `make check-part PART=ces` for live edits. Run `make shots` for the full rehearsal
+   or toolchain/IRQ changes; inspect the fresh D07 capture for uniform bars, logo, skyline, and scroller.
 3. Timing-sensitive changes: check `build/opencode.lst` for page crossings
    (high byte of the address before and after a loop).
 4. Only the user can test on real hardware. Say so when a change depends on timing.
