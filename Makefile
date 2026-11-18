@@ -18,15 +18,43 @@ ACMEFLAGS := -I include -f cbm --cpu 6502
 DEMO      := $(BUILD)/opencode.prg
 D64       := $(BUILD)/opencode.d64
 EXAMPLES  := $(patsubst docs/examples/%.asm,$(BUILD)/examples/%.prg,$(wildcard docs/examples/*.asm))
+DEMO_SRC  := src/main.asm include/c64.asm $(wildcard src/gfx/*.asm) $(wildcard src/music/*.sid)
 
-.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-example packed shots clean
+# Preview names map to the sequencer order in src/main.asm.
+PART_NAMES      := ces
+PART_ID_ces     := 0
+PART            ?=
+RUN_PRG         := $(DEMO)
+
+ifneq ($(filter run check-part,$(MAKECMDGOALS)),)
+ifneq ($(strip $(PART)),)
+ifneq ($(words $(PART)),1)
+$(error Choose one PART: $(PART_NAMES))
+endif
+ifeq ($(filter $(PART_NAMES),$(PART)),)
+$(error Unknown PART '$(PART)'; choose: $(PART_NAMES))
+endif
+PREVIEW := $(BUILD)/preview/m$(MUSIC)-t$(TIMING)/$(PART).prg
+RUN_PRG := $(PREVIEW)
+else ifneq ($(filter check-part,$(MAKECMDGOALS)),)
+$(error Specify PART for check-part: $(PART_NAMES))
+endif
+endif
+
+.PHONY: all demo examples check-examples gfx gifs effects-page d64 run run-example check-part packed shots clean
 
 all: demo examples
 
 demo: $(DEMO)
 
-$(DEMO): src/main.asm include/c64.asm $(wildcard src/gfx/*.asm) $(wildcard src/music/*.sid) | $(BUILD)
+$(DEMO): $(DEMO_SRC) | $(BUILD)
 	$(ACME) $(ACMEFLAGS) -DMUSIC=$(MUSIC) -DTIMING=$(TIMING) -l $(BUILD)/opencode.sym -r $(BUILD)/opencode.lst -o $@ $<
+
+ifneq ($(PREVIEW),)
+$(PREVIEW): $(DEMO_SRC) Makefile
+	@mkdir -p $(@D)
+	$(ACME) $(ACMEFLAGS) -DMUSIC=$(MUSIC) -DTIMING=$(TIMING) -DSTART_PART=$(PART_ID_$(PART)) -o $@ $<
+endif
 
 examples: $(EXAMPLES)
 
@@ -51,8 +79,11 @@ d64: $(DEMO)
 packed: $(DEMO)
 	$(EXOMIZER) sfx basic -o $(BUILD)/opencode-packed.prg $(DEMO)
 
-run: $(DEMO)
-	$(X64) -pal -sidmodel $(SIDMODEL) -autostart $(DEMO)
+run: $(RUN_PRG)
+	$(X64) -pal -sidmodel $(SIDMODEL) -autostart $(RUN_PRG)
+
+check-part: $(PREVIEW)
+	python3 tools/check_part.py $(PREVIEW) --x64 "$(X64)" $(if $(filter ces,$(PART)),--top-bars)
 
 # make run-example EX=02_stable_raster_bars
 run-example: examples

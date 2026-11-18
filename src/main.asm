@@ -28,6 +28,8 @@
 
 !ifndef MUSIC { MUSIC = 0 }
 !ifndef TIMING { TIMING = 0 }
+!ifndef START_PART { START_PART = 0 }
+!if START_PART != 0 { !error "START_PART must be a valid part index" }
 
 ; ---- memory map ----------------------------------------------------------------
 CODE_END     = $1000            ; code must stay below (music / free)
