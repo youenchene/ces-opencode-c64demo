@@ -5,7 +5,7 @@ Usage: python3 tools/effects_page.py        (or: make effects-page)
 
 - "In the demo" cards use real VICE captures from docs/img/effects/*.gif (make gifs).
 - Library cards (tiers A/B/C) are parsed from docs/08-effects-library.md, so the page stays in sync
-  with the doc. Their previews are browser simulations (tools/effects_page.js), marked as such.
+   with the doc. Previews use VICE captures where available and browser simulations otherwise.
 The page is a single self-contained file apart from the GIFs (relative paths).
 """
 import glob
@@ -49,6 +49,8 @@ IMPLEMENTED = [
     ("ex-heads.gif", "Example B30: bouncing portrait sprites",
      "Two portrait cutouts spin like wheels and bounce off the screen edges. Standalone example.", "docs/examples/B30_rotating_heads.asm"),
 ]
+
+LIBRARY_CAPTURES = {"B30": "ex-heads.gif"}
 
 TIERS = {
     "A": ("Tier A — one-prompt effects", "Data or colour-RAM change only; safe to do live on stage."),
@@ -106,8 +108,14 @@ def example_link(fx_id):
 
 
 def card_lib(r):
-    return f"""<article class="card" data-tier="{r['tier']}" data-text="{html.escape((r['name'] + ' ' + r['see']).lower())}">
-  <div class="pic"><canvas data-fx="{r['id']}"></canvas><span class="sim">simulation</span></div>
+    capture = LIBRARY_CAPTURES.get(r["id"])
+    if capture:
+        preview = (f'<img src="img/effects/{capture}" alt="{html.escape(r["name"])}" loading="lazy">'
+                   '<span class="sim">PAL VICE capture</span>')
+    else:
+        preview = f'<canvas data-fx="{r["id"]}"></canvas><span class="sim">simulation</span>'
+    return f"""<article id="{r['id']}" class="card" data-tier="{r['tier']}" data-text="{html.escape((r['name'] + ' ' + r['see']).lower())}">
+  <div class="pic">{preview}</div>
   <h3><span class="id">{r['id']}</span> {md_inline(r['name'])}</h3>
   <p>{md_inline(r['see'])}</p>
   <details><summary>How</summary><p>{link_sources(md_inline(r['how']))}</p></details>
@@ -117,13 +125,13 @@ def card_lib(r):
 
 def main():
     lib = parse_library()
-    parts = [f'<section id="done"><h2>In the demo now ({len(IMPLEMENTED)})</h2>'
+    parts = [f'<section id="done"><h2>Demo and example captures ({len(IMPLEMENTED)})</h2>'
              '<p class="lead">Animated captures of the real program running in VICE (<code>make gifs</code>).</p>'
              '<div class="grid">' + "\n".join(card_impl(*e) for e in IMPLEMENTED) + "</div></section>"]
     for t, (title, lead) in TIERS.items():
         cards = [card_lib(r) for r in lib if r["tier"] == t]
         parts.append(f'<section id="tier{t}" class="tier"><h2>{title} ({len(cards)})</h2><p class="lead">{lead} '
-                     'Previews are browser simulations in the C64 palette, not C64 code.</p>'
+                     'Each preview is labelled as a PAL VICE capture or a browser simulation.</p>'
                      '<div class="grid">' + "\n".join(cards) + "</div></section>")
     page = TEMPLATE.replace("%BODY%", "\n".join(parts)).replace("%JS%", open(JS, encoding="utf-8").read()) \
         .replace("%COUNT%", str(len(IMPLEMENTED) + len(lib)))

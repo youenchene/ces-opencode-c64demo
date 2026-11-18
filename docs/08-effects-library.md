@@ -83,6 +83,17 @@ Columns: **CPU** is a rough per-frame cost (PAL frame = 19,656 cycles; our curre
 | B29 | Music sync | Flashes and bounces hit the beat | Beat table of frame numbers, or read voice 3 envelope `$d41c` if the tune uses voice 3 for drums | ~0 | `irq_bottom` |
 | B30 | Bouncing portrait sprites | Two cut-out portraits spin like wheels and bounce off the screen edges | Swap sprite pointers through 16 precalculated poses and reverse velocity at the edges | ~1k | `tools/faces2sprites.py` |
 
+### B30 — Bouncing portrait sprites
+
+Etienne Reith and Yann Petit spin in opposite directions and bounce off all four
+display edges. Each head uses four double-size sprites (all eight in total); the
+head bounds can overlap without a collision. This is a standalone effect, not
+part of the main demo loop.
+
+Run it with `make run-example EX=B30_rotating_heads`. See the
+[ACME example](examples/B30_rotating_heads.asm) and the
+[PAL VICE preview](effects.html#B30).
+
 ## Tier C — cycle-exact / heavy (prepare off-stage)
 
 | # | Effect | What you see | Why it's hard | Source |
